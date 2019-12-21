@@ -1,0 +1,258 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import '~node_modules/primeicons/primeicons.css';
+@import '~node_modules/primeng/resources/themes/omega/theme.css';
+@import '~node_modules/primeng/resources/primeng.min.css';
+
+* {
+  font-family: 'Lato';
+  font-size: 13px;
+}
+
+html,
+body {
+  overflow-x: hidden;
+}
+
+a:-webkit-any-link {
+  text-decoration: none;
+}
+
+.btn-secondary {
+  background: #dddddd !important;
+  color: #000000 !important;
+  border: none !important;
+}
+
+.padding-right-7 {
+  padding-right: 7px !important;
+}
+
+.padding-left-8 {
+  padding-left: 15px !important;
+}
+
+.ui-dialog-content {
+  height: initial !important;
+}
+
+.ui-table-resizable .ui-table-thead>tr>th {
+  font-size: 13px !important;
+  background-color: #DDDDDD !important;
+  white-space: nowrap;
+  font-weight: 400;
+  vertical-align: middle;
+}
+
+.table-striped tbody tr:nth-child(odd) {
+  background-color: #f2f2f2 !important;
+  font-size: 13px !important;
+
+  a {
+    font-size: 13px !important;
+  }
+}
+
+.table-striped tbody tr:nth-child(even) {
+  background-color: #fff !important;
+  font-size: 13px !important;
+}
+
+.table-striped {
+  text-align: left;
+}
+
+.ui-toast-message {
+  margin-bottom: 0px !important;
+}
+
+b {
+  font-weight: 600;
+}
+
+.ui-dialog.ui-dialog-content {
+  padding-left: 0px !important;
+}
+
+.ui-sortable-column-icon.pi.pi-fw.pi-sort-up,
+.ui-sortable-column-icon.pi.pi-fw.pi-sort-down {
+  color: #1b1d1f !important;
+}
+
+.has-success .form-control {
+  border-color: #3c763d;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+}
+
+.has-success .form-control:focus {
+  border-color: #2b542c;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #67b168;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #67b168;
+}
+
+.has-success .form-control-feedback {
+  color: #3c763d;
+}
+
+.has-danger .form-control {
+  border-color: #F92A12;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+}
+
+.has-danger .form-control:focus {
+  border-color: #F92A12;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483;
+}
+
+.has-danger .form-control-feedback {
+  color: #F92A12;
+}
+
+.ui-dialog.ui-widget .ui-dialog-titlebar {
+  padding: 4px 0px 6px 4px;
+}
+
+.ui-dialog-footer {
+  padding: 0px 10px 0px 0px;
+}
+
+.ui-paginator-page {
+  border-radius: 0px !important;
+}
+
+.ui-paginator .ui-paginator-page,
+.ui-paginator .ui-paginator-next,
+.ui-paginator .ui-paginator-last,
+.ui-paginator .ui-paginator-first,
+.ui-paginator .ui-paginator-prev {
+  cursor: pointer;
+  border: 0;
+}
+
+.ui-paginator .ui-paginator-page.ui-state-active {
+  background-color: #428bca;
+}
+
+.ui-paginator-first ::before {
+  content: '←';
+}
+
+.ui-paginator-last ::before {
+  content: '→';
+}
+
+.ui-paginator-prev ::before {
+  content: '«';
+}
+
+.ui-paginator-next ::before {
+  content: '»';
+}
+
+.ui-paginator .ui-paginator-icon {
+  margin-top: -.6em;
+}
+
+.ui-table .ui-table-tbody>tr.ui-state-highlight {
+  background-color: #25a8dd !important;
+}
+
+.ui-table .ui-table-tbody>tr.ui-state-highlight>td>div>ul>li {
+  background-color: #25a8dd !important;
+}
+
+div.modal-backdrop.show:nth-of-type(2) {
+  z-index: 1042;
+}
+
+.container {
+  margin-left: 5px;
+}
+
+body {
+  background-color: #f5f5f5;
+  font-weight: 400;
+}
+
+.ui-button-text-icon-left .ui-button-text {
+  padding: 0.1em 1em !important;
+}
+
+.ui-button span.pi {
+  display: none !important;
+}
+
+span.add {
+  background: url(../src/assets/Images/add-20x.svg) no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
+  display: inline-block;
+  height: 14px;
+  width: 14px;
+}
+
+span.edit {
+  background: url(../src/assets/Images/edit-20x.svg) no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
+  display: inline-block;
+  height: 14px;
+  width: 14px;
+}
+
+span.refresh {
+  background: url(../src/assets/Images/refresh.svg) no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
+  display: inline-block;
+  height: 14px;
+  width: 14px;
+}
+
+span.remove {
+  background: url(../src/assets/Images/remove-20x.svg) no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
+  display: inline-block;
+  height: 14px;
+  width: 14px;
+}
+
+span.trash {
+  background: url(../src/assets/Images/trash-20x.svg) no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
+  display: inline-block;
+  height: 14px;
+  width: 14px;
+}
+
+span.favorite-add {
+  background: url(../src/assets/Images/favorite-add-20x.svg) no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
+  display: inline-block;
+  height: 14px;
+  width: 14px;
+}
+
+span.close-card {
+  background: url(../src/assets/Images/close-card.png) no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
+  display: inline-block;
+  height: 14px;
+  width: 14px;
+}
+
+span.open-card {
+  background: url(../src/assets/Images/open-card.png) no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
+  display: inline-block;
+  height: 14px;
+  width: 14px;
+}

@@ -1,0 +1,17 @@
+@import './sass/styles.scss';
+@include themify($themes) {
+  .oncology360 {
+    .btn-black,
+    .btn-black:hover {
+        background: #dfe5eb;
+        color: #394a59;
+        border: none !important;
+        border-radius: 4px;
+        padding-top: 0px;
+        height: 24px;
+        font-size: 14px !important;
+        right: 3px;
+        margin: 8px 0px 8px 8px;
+    }
+  }
+}
