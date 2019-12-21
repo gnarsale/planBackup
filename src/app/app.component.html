@@ -1,0 +1,10 @@
+<div *ngIf="styleConfigured" class="app-div " [ngClass]="styleConfigured ">
+  <!-- Other Contents-->
+  <router-outlet></router-outlet>
+
+  <!-- Confirmation Dialog-->
+  <p-confirmDialog acceptButtonStyleClass="btn btn-black" rejectButtonStyleClass="btn btn-black" icon="pi pi-exclamation-triangle"
+    baseZIndex="10050" header="Confirmation" icon="pi pi-exclamation-triangle" width="425"></p-confirmDialog>
+</div>
+<ng-http-loader [backgroundColor]="'#00ccff'" [spinner]="spinkit.skWave" [minDuration]="300" [extraDuration]="300">
+</ng-http-loader>
