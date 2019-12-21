@@ -1,0 +1,39 @@
+@import 'src/sass/styles.scss';
+
+@include themify($themes) {
+
+  // VARIAN STYLES
+  .varian {
+    ul>li>a {
+      color: #5c707B;
+    }
+
+    .link {
+      margin: 10px 0px 0px 0px;
+      font-size: 12px;
+      cursor: pointer;
+      list-style-type: none;
+      padding-left: 22px;
+    }
+
+    .header-color {
+      height: 41px;
+      background: #000000;
+    }
+
+    .globe-icon {
+      color: #fff;
+      margin-right: 24px;
+      position: relative;
+      right: 9px;
+    }
+
+    .varian-link {
+      color: #fff;
+      font-size: 11px;
+    }
+  }
+
+  // ONCOLOGY360 STYLES
+  .oncology360 {}
+}
