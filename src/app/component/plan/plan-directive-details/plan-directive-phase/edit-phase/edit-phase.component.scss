@@ -1,0 +1,185 @@
+.parent-box {
+  background: #aeaeae;
+  padding: 5px;
+}
+
+.frac-span {
+  background: #ddd;
+  padding: 6px;
+  border-radius: 7px;
+  margin: 0 5px 0 0;
+}
+
+// .frac-span1 {
+//   background: #ffffff;
+//   //padding: 6px;
+//   color: #ffffff;
+//   border-radius: 7px;
+//   // margin: 0 5px 0 0;
+//   height: 15px;
+//   width: 15px;
+// }
+
+.phase-names {
+  display: inline-block;
+  background: aliceblue;
+  padding: 36px 5px 12px 12px;
+}
+
+.phase {
+  display: inline-block;
+  background: aliceblue;
+  padding: 5px 5px 12px 12px;
+  margin-right: 10px;
+}
+
+.info-box {
+  box-shadow: 3px 3px 5px 2px #ccc;
+
+}
+
+.info-box .title {
+  padding: 5px;
+  color: #666666;
+}
+
+.info-box span {
+  color: #666666;
+}
+
+.margin-0 {
+  margin: 0px;
+}
+
+.info-box-value {
+  padding-bottom: 10px;
+}
+
+.info-box-header {
+  margin: 0 10px 10px 10px !important;
+  border-bottom: 1px solid #999999;
+}
+
+.row.margin-0 input {
+  padding: 0 5pX;
+}
+
+.ui-dialog-content {
+  overflow: hidden !important;
+  font-size: 0.85em !important;
+}
+
+.has-error .txt-error-border {
+  border-color: #fc0202;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+  border-width: thin;
+  color: #fc0202 !important;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+.max-width {
+  max-width: 24%;
+}
+
+.background-color-css {
+  background-color: #f0f8ff;
+}
+
+.font-11px {
+  font-size: 11px;
+}
+
+.color-unit {
+  color: #666666;
+}
+
+.text-box-width {
+  max-width: 82.666667%;
+}
+
+.unit-margin-left {
+  margin-left: -50px;
+}
+
+.padding-none {
+  padding: 0px;
+}
+
+.padding-right-lable {
+  padding-right: 27px;
+}
+
+.input-box-width {
+  max-width: 18%;
+  margin-left: 9px;
+}
+
+.margin-left-15px {
+  margin-left: 15px;
+}
+
+.margin-bottom-9px {
+  margin-bottom: 9px;
+}
+
+.dynamic-scroll {
+  font-size: 0.85em;
+  white-space: nowrap;
+  overflow-x: scroll;
+  overflow-y: scroll;
+  width: 100%;
+  padding-bottom: 10px;
+  height: auto;
+  max-height: 171px;
+}
+
+.phase-section {
+  padding-bottom: 18px;
+}
+
+.error-dose {
+  color: red;
+}
+
+.total-phase {
+  overflow-x: auto !important;
+  direction: ltr !important;
+  margin-left: 0px !important;
+  padding-left: 0px !important;
+}
+
+.phase-list {
+  overflow-x: auto;
+  direction: ltr;
+  font-size: 0.85em;
+  padding: 0px;
+}
+
+.dose-input {
+  max-height: 22px;
+  max-width: 52px;
+  margin-left: -6px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.row .mat-card{
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+.row .mat-card .mat-card-content {
+  flex-grow: 1;
+}

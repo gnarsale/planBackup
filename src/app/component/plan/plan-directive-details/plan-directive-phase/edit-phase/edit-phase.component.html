@@ -1,0 +1,182 @@
+<!-- Edit Phase Dialog-->
+<p-dialog [draggable]="false" header="Edit Phases" [closable]="false" [(visible)]="showDialog" [resizable]=false
+  [modal]="true" [responsive]="true" position="left" [width]="900" [minWidth]="1300">
+
+  <!-- Displaying the Prescribed Session in Each Phase -->
+  <div class="row">
+    <div class="phases dynamic-scroll" *ngIf="phases">
+      <div class="phase-names">
+        <div style="padding-top: 1px" [class]=" k< phases.length-1 ?'phase-section':''"
+          *ngFor=" let phaseName of phases; let k=index">
+          Phase {{k+1}} </div>
+      </div>
+      <span>
+        <div class="phase" *ngFor="let phase of phases; let i=index;">
+          <div *ngFor="let phase1 of phases; let j=index;">
+            <div *ngIf="i === j,else notequal">
+              <div>
+                <p>{{i+1}}</p>
+              </div>
+              <div>
+                <span class="frac-span" *ngFor="let num of getNumberArray(i,phase.FractionCount)">
+                  {{num}}
+                </span>
+              </div>
+            </div>
+            <ng-template #notequal>
+              <div>
+                <br />
+                <br />
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </span>
+    </div>
+  </div>
+
+  <!-- Total Phase and Phases Part -->
+  <div class="row">
+    <div #phaseList class="col-md-11 row text-center flex-nowrap total-phase">
+      <!-- Displaying total phase -->
+      <div class="col-sm-4 mat-card max-width padding-none">
+        <div class="mat-card-content info-box background-color-css" style='margin-left: 10px;'>
+          <div class="clearfix info-box-header" style="margin-top: 0px;">
+            <span class="pull-left" style="padding-top: 5px;"><b>Total</b></span>
+          </div>
+          <div class="row margin-0" style="padding-bottom: 6px;">
+            <span class="col-sm-8 text-left"> Treated Fx <b>0</b> of <b>{{totalphase.fractioncount}}</b> </span>
+          </div>
+          <table style="width: 100%;">
+            <tr class="row margin-0">
+              <th class="col-sm-6 font-11px color-unit" style="margin-left: -7px;">
+                Target
+              </th>
+              <th class="col-sm-6 font-11px color-unit padding-right-lable" style="margin-left: -15px;">
+                Total Dose
+              </th>
+            </tr>
+            <tr class="clearfix row" style="margin-bottom: 6%;"
+              *ngFor="let target of totalphase.targets; let i = index;">
+              <td class="col-sm-6 margin-0">
+
+                <span title="{{target.targetName}}" class="text-left col-sm-6">
+                  <b>{{(target.targetName.length>9)? (target.targetName |
+                    slice:0:9)+'..':(target.targetName) }}</b>
+                </span>
+              </td>
+              <td>
+                <span [ngStyle]="{'color': target.isError ? 'red' : '#666666'}"
+                  class="text-left col-sm-6"><b>{{target.targetValue}}</b> Gy</span>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- Different Phases -->
+      <div class="col-sm-4 mat-card max-width phase-list" *ngFor="let phase of phases; let i = index;">
+        <div class="mat-card-content info-box background-color-css">
+          <div class="clearfix info-box-header row">
+            <span class="col-sm-8 text-left title" style="margin-bottom: 0px;padding-bottom: 0px;"><b>Phase
+                {{i+1}}</b>
+            </span>
+            <span class="col-sm-2" style="margin-top: 2px;padding-left:54px">
+              <!-- <i class="fa fa-trash-o fa-lg " style="cursor: pointer;" (click)="onPhaseDelete(phase)" aria-hidden="true"></i> -->
+              <span (click)="onPhaseDelete(phase)" class="trash icon-font-size " style="margin-top: 4px;"></span>
+            </span>
+          </div>
+
+          <div class="clearfix info-box-value">
+            <div class="row margin-0"
+              [ngClass]="{'has-error': this.doseValidate !== undefined && doseValidate[i] !== undefined && doseValidate[i].isFractionInValid }"
+              style="margin-bottom: 1%;">
+              <span class=" text-left margin-left-15px">Number of Fractions</span>
+              <input style="max-height:22px" title=""
+                class=" input-box-width form-control txt-error-border text-box-width" type="text"
+                (keypress)="numberOnly($event)" maxlength="2"
+                (keyup)="phaseFractionCountChange(phase,phase.FractionCount)" [(ngModel)]="phase.FractionCount" />
+            </div>
+            <table>
+              <tr class="row margin-0">
+                <th class="col-sm-7">
+                  <span class="text-left font-11px"> Dose </span>
+                </th>
+                <th class="col-sm-4">
+                  <span style="margin-left: 12px; " class="font-11px"> Dose/FX </span>
+                </th>
+              </tr>
+              <div *ngFor="let target of totalphase.targets; let j = index;">
+                <div *ngIf="getPrescribedTargets(target,phase); else elsePaart">
+                  <tr class="row margin-0" *ngIf="PrescriptionTargetData">
+                    <td class="col-sm-5">
+                      <span
+                        [ngStyle]="{'color': this.doseValidate !== undefined && doseValidate[i] && doseValidate[i].prescriptionTargets[j] && doseValidate[i].prescriptionTargets[j].isError ? 'red' : '#666666'}">
+                        <b>{{(PrescriptionTargetData.FractionDoseGy *
+                          phase.FractionCount).toFixed(2)}} </b> Gy</span>
+                      <!-- <span *ngIf='(PrescriptionTargetData.FractionDoseGy * phase.FractionCount) > 125'
+                        class=" text-left ">
+                        <b>0.00</b> Gy</span> -->
+                    </td>
+                    <td class="col-sm-5 form-group"
+                      [ngClass]="{'has-error': this.doseValidate !== undefined && doseValidate[i] && doseValidate[i].prescriptionTargets[j] && doseValidate[i].prescriptionTargets[j].isError}">
+                      <input title="" class='form-control txt-error-border dose-input' type="number"
+                        (keyup)="phaseFractionDoseChange(phase,$event,target.targetId)"
+                        [ngModel]="PrescriptionTargetData.FractionDoseGy" />
+                    </td>
+                    <td class="col-sm-2 color-unit">
+                      Gy/Fx
+                    </td>
+                  </tr>
+                </div>
+                <ng-template #elsePaart>
+                  <tr class="row margin-0">
+                    <td class="col-sm-5">
+
+                    </td>
+                    <td style="margin-bottom:32px;" class="col-sm-5 form-group">
+
+                    </td>
+                    <td class="col-sm-2 color-unit">
+
+                    </td>
+                  </tr>
+                </ng-template>
+              </div>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Add new Phase Icon -->
+    <div class="color-unit">
+      <span style="cursor: pointer; line-height: 192px;" title="Add New Phase">
+        <i class="fa fa-plus-square-o fa-2x" style="margin-left: 40px;" (click)="addNewPhase()" aria-hidden="true"></i>
+      </span>
+    </div>
+  </div>
+
+
+  <!-- Footer for Cancel and Save the Edited Phases -->
+  <p-footer class='row'>
+    <div class="col-sm-10">
+      <ul>
+        <li *ngIf="fractionError === true" class='error-dose text-lg-left'>
+          Number of Fractions should be from 1 to 50.
+        </li>
+        <li *ngIf="doseError === true" class='error-dose text-lg-left'>
+          Dose value should be from 0.01Gy to 125Gy.
+        </li>
+        <li *ngIf="doseAcrossPhaseError === true" class='error-dose text-lg-left'>
+          Dose value across phase should be from 0.01Gy to 125Gy.
+        </li>
+      </ul>
+    </div>
+    <div class=" col-sm-2 ui-helper-clearfix ">
+      <button type="button " pButton class="btn btn-black btn-secondary btn-sm " [disabled]='disableEditSave'
+        label="Save " (click)="savingPhaseEdit() "></button>&nbsp;
+      <button type="button " pButton class="btn btn-black btn-secondary btn-sm " label="Cancel "
+        (click)="cancelPhaseEditing() "></button>
+    </div>
+  </p-footer>
+</p-dialog>
