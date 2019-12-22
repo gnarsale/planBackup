@@ -1,0 +1,590 @@
+<ng-container *ngIf="styleConfigured==='oncology360',else varian">
+  <div class="card">
+    <div class="card-header row target-organ-header">
+      <span title="{{structure.Name}}" style="display: inline-block; width: 55%;" class="col-sm-8"
+        (click)="checkCollapse()">
+        <p><b>{{(structure.Name.length>20)? (structure.Name |
+            slice:0:20)+'..':(structure.Name) }}</b></p>
+        <p class="font-bold meaning" *ngIf="structure.type == 'TargetStructure'">
+          Meaning : {{structure.Meaning}}
+        </p>
+      </span>
+      <span class="col-sm-4" *ngIf="type == 'readWrite',else readonly">
+        <span *ngIf="down,else up" (click)="checkCollapse()">
+          <span class="open-card structure-oar-icon accordin-up icon-font-size"></span>
+        </span>
+        <ng-template #up>
+          <span (click)="checkCollapse()">
+            <span class="close-card structure-oar-icon accordin-down icon-font-size"></span>
+          </span>
+        </ng-template>
+
+        <span (click)="Delete()" style="float: right; margin-left: 4px;margin-right: 4px; margin-top: 7px;"
+          class="trash icon-font-size"></span>
+        <span (click)="Edit()" style="float: right; margin-top: 8px;" class="edit icon-font-size"></span>
+      </span>
+
+      <ng-template #readonly>
+        <span>
+          <a *ngIf="down,else upreadonly" (click)="down=false;up=true">
+            <span class="open-card structure-oar-icon accordin-up icon-font-size"></span>
+          </a>
+          <ng-template #upreadonly>
+            <a (click)="down=true;up=false">
+              <span class="close-card structure-oar-icon accordin-down icon-font-size"></span>
+            </a>
+          </ng-template>
+
+        </span>
+      </ng-template>
+
+    </div>
+
+    <div class="card-body">
+      <div *ngIf="up,else downbody" style="margin:4px;">
+        <table style="width:100%; position: relative; left: 12px;">
+          <tr *ngFor="let targetPhase of structure.Phases">
+            <p *ngIf="targetPhase.Objectives && targetPhase.Objectives.length > 0" class="font-bold"
+              style="margin-top: 2px; margin-left: 2px;">Phase
+              {{targetPhase.phaseId}}
+            </p>
+            <p>
+              <td style="position: relative; bottom: 11px;">
+                <table>
+                  <div class="padding-bottom-7px" *ngFor="let targetPhaseObjective of targetPhase.Objectives ">
+                    <tr>
+                      <td style="color:#8195a7;">
+                        Goal:
+                      </td>
+                      <td class="width-85px">
+                        {{targetPhaseObjective.ClinicalGoal.DoseLeft}}
+                      </td>
+                      <td class="width-65px">
+                        {{targetPhaseObjective.ClinicalGoal.DoseRight}}
+                      </td>
+                      <td>
+                        P:
+                      </td>
+                      <td class="font-bold">
+                        {{targetPhaseObjective.Priority}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="color:#8195a7;">
+                        Var:
+                      </td>
+                      <td class="width-85px">
+                        {{targetPhaseObjective.AcceptableVariation.DoseLeft}}
+                      </td>
+                      <td class="width-65px">
+                        {{targetPhaseObjective.AcceptableVariation.DoseRight}}
+                      </td>
+                    </tr>
+                  </div>
+                </table>
+              </td>
+            </p>
+          </tr>
+        </table>
+      </div>
+      <ng-template #downbody>
+        <div class="total-goals">
+          <span *ngIf="structureGoalLength > 1,else equalto1" class="margin-right-12px">{{structureGoalLength}}
+            Goals</span>
+          <ng-template #equalto1>
+            <span class="margin-right-12px">{{structureGoalLength}} Goal</span>
+          </ng-template>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+  <p-dialog [draggable]="false" header="Edit Organs" [resizable]=false [(visible)]="displayDialog" [responsive]="true"
+    showEffect="fade" [modal]="true" [closable]=" false" [positionTop]='50' [width]="920">
+    <div class="ui-g ui-fluid" *ngIf="oarClinicalGoals">
+      <div class="ui-g-2">
+        <label for="StructureName" class="edit-font">Structure Name</label>
+      </div>
+      <div class="ui-g-10">
+        <input (keypress)="OmitSpecialChar($event)" class="form-control edit-font select" style="width: fit-content;"
+          (keyup)="this.name == '' ? this.disableEditType = true : this.goalsValid('OAR')" [(ngModel)]="name"
+          type="text">
+      </div>
+      <div class="ui-g-2">
+        <label class="edit-font" for="Meaning">Meaning</label>
+      </div>
+      <div class="ui-g-10">
+        <label class="edit-font" for="Meaning"> {{structure.Meaning}}</label>
+      </div>
+      <div class="ui-g-2">
+        <label class="edit-font" for="ClinicalGoals">Clinical Goals</label>
+      </div>
+      <div class="ui-g-10">
+        <table>
+          <tr>
+            <th class="phase-header-onco"> Phase </th>
+            <th class="goal-header-onco"> Goal </th>
+            <th class="variation-header-onco"> Variation </th>
+            <th class="priority-header-onco"> Priority </th>
+          </tr>
+        </table>
+        <p-table #oarClinicalGoalList [value]="oarClinicalGoals" [style]="{'max-height': '252px','overflow': 'auto'}">
+          <ng-template pTemplate="body" let-rowIndex="rowIndex" let-rowData let-columns="columns">
+            <tr [pSelectableRow]="rowData" style="background-color: #ffffff;">
+              <td class="borderless">
+                <select class="form-control goal-box edit-font select" style="height: 30px;"
+                  (change)="onPhaseChange($event.target.value,rowData,'OAR')">
+                  <option *ngFor="let phase of phaseAll" [selected]="phase.Value == rowData.Phase"
+                    [value]="phase.Value">{{phase.Name}}
+                  </option>
+                </select>
+              </td>
+              <td class="borderless">
+                <app-goal-intellisense (LastRowEmitter)="ScrollOARInView($event);" [goalSequence]="rowIndex"
+                  (GoalErrorEmitter)="ValidateClinicalGoal($event)" (GoalEmitter)="updateGoal(rowData,$event,'OAR')"
+                  [(goal)]="rowData.Goal" [clinicalGoal]="{rowData :rowData,clinicalG : 'Goal'}">
+                </app-goal-intellisense>
+              </td>
+              <td class="borderless">
+                <app-goal-intellisense (LastRowEmitter)="ScrollOARInView($event);" [goalSequence]="rowIndex"
+                  (GoalErrorEmitter)="ValidateClinicalGoal($event)"
+                  (GoalEmitter)="updateVariation(rowData,$event,'OAR')" [(goal)]="rowData.Variation"
+                  [clinicalGoal]="{rowData :rowData,clinicalG : 'Variation'}"></app-goal-intellisense>
+              </td>
+              <td style="width: 100px;" class="borderless">
+                <select class="form-control edit-font select"
+                  (change)="onPriorityChange($event.target.value,rowData,'OAR')">
+                  <option *ngFor="let priority of goalPriority" [selected]="priority.Value == rowData.Priority"
+                    [value]="priority.Value">{{priority.Name}}</option>
+                </select>
+              </td>
+              <td style="width: 5%;" class="borderless">
+                <span (click)="deleteGoal(rowData,'OAR')" class="trash icon-font-size"></span>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+      <div class="ui-g-2">
+      </div>
+      <div class="ui-g-10">
+        <span title="Add new goal" (click)="addGoal('OAR')" class="add icon-font-size"></span>
+      </div>
+
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix"
+        style="text-align: right;padding-bottom: 0px;padding-top: 0px;">
+        <button type="button" [disabled]='disableEditType' pButton
+          class="btn btn-black btn-secondary btn-sm onco-button-color" label="OK"
+          (click)="save(oarClinicalGoals,structure.StructureId,'OAR')"></button>&nbsp;
+        <button type="button" pButton class="btn btn-black btn-secondary btn-sm" label="Cancel"
+          (click)="close('OAR')"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
+
+  <p-dialog [draggable]="false" header="Edit Target" [resizable]=false [(visible)]="targetDisplayDialog"
+    showEffect="fade" [modal]="true" [closable]="false" [positionTop]='50' [width]="920">
+    <div *ngIf="targetClinicalGoals" class="container">
+      <div class="row top-buffer">
+        <div class="col-sm-6 col-lg-2">
+          <label for="StructureName">Structure Code</label>
+        </div>
+        <div class="col-sm-5 col-lg-3">
+          <label for="StructureName"> {{structure.Code}}</label>
+        </div>
+        <div class="col-sm-0 col-lg-1"></div>
+        <div class="col-sm-6 col-lg-2">
+          <label for="Meaning">Meaning</label>
+        </div>
+        <div class="col-sm-5 col-lg-3">
+          <label for="Meaning"> {{structure.Meaning}}</label>
+        </div>
+      </div>
+      <div class="row top-buffer">
+        <div class="col-sm-6 col-lg-2">
+          <label for=" TargetName">Name</label>
+        </div>
+        <div class="col-sm-5 col-lg-10">
+          <input class="goal-box" [(ngModel)]="name" maxlength="32"
+            (keyup)="this.name == '' ? this.disableEditType = true : this.goalsValid('Target')"
+            style="font-weight: bold; width: 39%; height: 30px;font-size: 1em;" type="text" class="form-control"
+            (keypress)="OmitSpecialChar($event)">
+        </div>
+      </div>
+      <div class="row top-buffer">
+        <div class="col-sm-12 col-lg-2">
+          <label for="ClinicalGoals">Clinical Goals</label>
+        </div>
+        <div class="col-sm-12 col-lg-10">
+          <table>
+            <tr>
+              <th class="phase-header"> Phase </th>
+              <th class="goal-header"> Goal </th>
+              <th class="variation-header"> Variation </th>
+              <th style="width: 60px;"> Priority </th>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="row top-buffer">
+        <div class="col-sm-0 col-lg-2">
+
+        </div>
+        <div #clinicalGoalList class="col-sm-12 col-lg-10 table-css">
+          <p-table [value]="targetClinicalGoals">
+            <ng-template pTemplate="body" let-i="rowIndex" let-rowIndex="rowIndex" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td class="borderless">
+                  <select class="form-control goal-box" style="  height: 30px;"
+                    (change)="onPhaseChange($event.target.value,rowData,'Target')">
+                    <option *ngFor="let phase of phaseAll" [selected]="phase.Value == rowData.Phase"
+                      [value]="phase.Value">{{phase.Name}}
+                    </option>
+                  </select>
+                </td>
+                <td class="borderless">
+                  <app-goal-intellisense (LastRowEmitter)="ScrollInView($event);" [goalSequence]="rowIndex"
+                    (GoalErrorEmitter)="ValidateClinicalGoal($event)"
+                    (GoalEmitter)="updateGoal(rowData,$event,'Target')" [(goal)]="rowData.Goal"
+                    [clinicalGoal]="{rowData :rowData,clinicalG : 'Goal'}"></app-goal-intellisense>
+                </td>
+                <td class="borderless">
+                  <app-goal-intellisense (LastRowEmitter)="ScrollInView($event);" [goalSequence]="rowIndex"
+                    (GoalErrorEmitter)="ValidateClinicalGoal($event)"
+                    (GoalEmitter)="updateVariation(rowData,$event,'Target')" [(goal)]="rowData.Variation"
+                    [clinicalGoal]="{rowData :rowData,clinicalG : 'Variation'}"></app-goal-intellisense>
+                </td>
+                <td style="width: 100px;" class="borderless">
+                  <select class="form-control goal-box" style="  height: 30px;"
+                    (change)="onPriorityChange($event.target.value,rowData,'Target')">
+                    <option *ngFor="let priority of goalPriority" [selected]="priority.Value == rowData.Priority"
+                      [value]="priority.Value">{{priority.Name}}</option>
+                  </select>
+                </td>
+                <td style="width: 5%;" class="borderless">
+                  <span (click)="deleteGoal(rowData,'Target')" class="trash icon-font-size"></span>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+      <div class="row top-buffer">
+        <div class="col-sm-0 col-lg-2">
+        </div>
+        <div class="col-sm-12 col-lg-10">
+          <span title="Add new goal" (click)="addGoal('Target')" class="add icon-font-size"></span>
+        </div>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix"
+        style="text-align: right;padding-bottom: 0px;padding-top: 0px;">
+        <button [disabled]='disableEditType' type="button" class="btn btn-black btn-secondary btn-sm onco-button-color"
+          pButton label="OK" (click)="save(targetClinicalGoals,structure.StructureId,'Target')"></button>&nbsp;
+        <button type="button" class="btn btn-black btn-secondary btn-sm" pButton label="Cancel"
+          (click)="close('Target')"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
+</ng-container>
+
+<ng-template #varian>
+  <div class="card">
+    <div class="card-header">
+      <span title="{{structure.Name}}" style="display: inline-block; width: 55%;" (click)="checkCollapse()"> <b>{{(structure.Name.length>20)?
+          (structure.Name |
+          slice:0:20)+'..':(structure.Name) }}</b></span>
+      <span>
+        <span *ngIf="type == 'readWrite',else readonly">
+
+          <span *ngIf="down,else up" (click)="checkCollapse()">
+            <span class="open-card structure-oar-icon accordin-up icon-font-size"></span>
+          </span>
+          <ng-template #up>
+            <span (click)="checkCollapse()">
+              <span class="close-card structure-oar-icon accordin-down icon-font-size"></span>
+            </span>
+          </ng-template>
+
+          <span (click)="Delete()" class="trash icon-font-size delete-icon"></span>
+          <span (click)="Edit()" style="float: right; margin-top: 8px;" class="edit icon-font-size"></span>
+          <span *ngIf="structureGoalLength >1" class="margin-right-12px">{{structureGoalLength}} Goals</span>
+          <span *ngIf="structureGoalLength == 1" class="margin-right-12px">{{structureGoalLength}} Goal</span>
+        </span>
+        <ng-template #readonly>
+          <span>
+            <a *ngIf="down,else upcard" (click)="down=false;up=true">
+              <span class="open-card structure-oar-icon accordin-up icon-font-size"></span>
+            </a>
+            <ng-template #upcard>
+              <a (click)="down=true;up=false">
+                <span class="close-card structure-oar-icon accordin-down icon-font-size"></span>
+              </a>
+            </ng-template>
+            <span *ngIf="structureGoalLength >1" class="margin-right-12px">{{structureGoalLength}} Goals</span>
+            <span *ngIf="structureGoalLength == 1" class="margin-right-12px">{{structureGoalLength}}
+              Goal</span>
+          </span>
+        </ng-template>
+      </span>
+    </div>
+
+    <div class="card-body">
+      <div *ngIf="up" style="margin:4px;">
+        <div class="margin-bottom-5px">
+          <span class="font-bold" *ngIf="structure.type == 'TargetStructure'">
+            Meaning <span class="margin-left-5px">{{structure.Meaning}}</span>
+          </span>
+        </div>
+        <table style="width:100%">
+          <tr *ngFor="let targetPhase of structure.Phases">
+            <!-- <td class="padding-bottom-9px" *ngIf="targetPhase.Objectives.length !== 0 "> -->
+            <div class="font-bold" style="margin-top: 2px;">Phase
+              {{targetPhase.phaseId}}
+            </div>
+            <!-- </td> -->
+            <td>
+              <table>
+                <div class="padding-bottom-7px" *ngFor="let targetPhaseObjective of targetPhase.Objectives ">
+                  <tr>
+                    <td>
+                      Goal:
+                    </td>
+                    <td class="width-85px">
+                      {{targetPhaseObjective.ClinicalGoal.DoseLeft}}
+                    </td>
+                    <td class="width-65px">
+                      {{targetPhaseObjective.ClinicalGoal.DoseRight}}
+                    </td>
+                    <td>
+                      P:
+                    </td>
+                    <td class="font-bold">
+                      {{targetPhaseObjective.Priority}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Var:
+                    </td>
+                    <td class="width-85px">
+                      {{targetPhaseObjective.AcceptableVariation.DoseLeft}}
+                    </td>
+                    <td class="width-65px">
+                      {{targetPhaseObjective.AcceptableVariation.DoseRight}}
+                    </td>
+                  </tr>
+                </div>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <p-dialog [draggable]="false" header="Edit Organs" [resizable]=false [(visible)]="displayDialog" [responsive]="true"
+    showEffect="fade" [modal]="true" [closable]=" false" [positionTop]='50' [width]="920">
+    <div *ngIf="oarClinicalGoals" class="container">
+      <div class="row top-buffer">
+        <div class="col-sm-6 col-lg-2">
+          <label for="StructureName">Structure Name</label>
+        </div>
+        <div class="col-sm-5 col-lg-3">
+          <input (keypress)="OmitSpecialChar($event)" class="form-control"
+            (keyup)="this.name == '' ? this.disableEditType = true : this.goalsValid('OAR')" [(ngModel)]="name"
+            type="text">
+        </div>
+        <div class="col-sm-0 col-lg-1"></div>
+        <div class="col-sm-6 col-lg-2">
+          <label for="Meaning">Meaning</label>
+        </div>
+        <div class="col-sm-5 col-lg-3">
+          <label for="Meaning"> {{structure.Meaning}}</label>
+        </div>
+      </div>
+      <div class="row top-buffer">
+        <div class="col-sm-12 col-lg-2">
+          <label for="ClinicalGoals">Clinical Goals</label>
+        </div>
+        <div class="col-sm-12 col-lg-10">
+          <table>
+            <tr>
+              <th class="phase-header"> Phase </th>
+              <th class="goal-header"> Goal </th>
+              <th class="variation-header"> Variation </th>
+              <th style="width: 60px;"> Priority </th>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="row top-buffer">
+        <div class="col-sm-0 col-lg-2">
+
+        </div>
+        <div #oarClinicalGoalList class="col-sm-12 col-lg-10 table-css">
+          <p-table [value]="oarClinicalGoals">
+            <ng-template pTemplate="body" let-rowIndex="rowIndex" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData" style="border: solid 1px #c0cad3;">
+                <td class="borderless">
+                  <select class="form-control goal-box" style="  height: 30px;"
+                    (change)="onPhaseChange($event.target.value,rowData,'OAR')">
+                    <option *ngFor="let phase of phaseAll" [selected]="phase.Value == rowData.Phase"
+                      [value]="phase.Value">{{phase.Name}}
+                    </option>
+                  </select>
+                </td>
+                <td class="borderless">
+                  <app-goal-intellisense (LastRowEmitter)="ScrollOARInView($event);" [goalSequence]="rowIndex"
+                    (GoalErrorEmitter)="ValidateClinicalGoal($event)" (GoalEmitter)="updateGoal(rowData,$event,'OAR')"
+                    [(goal)]="rowData.Goal" [clinicalGoal]="{rowData :rowData,clinicalG : 'Goal'}">
+                  </app-goal-intellisense>
+                </td>
+                <td class="borderless">
+                  <app-goal-intellisense (LastRowEmitter)="ScrollOARInView($event);" [goalSequence]="rowIndex"
+                    (GoalErrorEmitter)="ValidateClinicalGoal($event)"
+                    (GoalEmitter)="updateVariation(rowData,$event,'OAR')" [(goal)]="rowData.Variation"
+                    [clinicalGoal]="{rowData :rowData,clinicalG : 'Variation'}"></app-goal-intellisense>
+                </td>
+                <td style="width: 100px;" class="borderless">
+                  <select class="form-control" (change)="onPriorityChange($event.target.value,rowData,'OAR')">
+                    <option *ngFor="let priority of goalPriority" [selected]="priority.Value == rowData.Priority"
+                      [value]="priority.Value">{{priority.Name}}</option>
+                  </select>
+                </td>
+                <td style="width: 5%;" class="borderless">
+                  <span (click)="deleteGoal(rowData,'OAR')" class="trash icon-font-size"></span>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+      <div class="row top-buffer">
+        <div class="col-sm-0 col-lg-2">
+        </div>
+        <div class="col-sm-12 col-lg-10">
+          <span title="Add new goal" (click)="addGoal('OAR')" class="add icon-font-size"></span>
+        </div>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix"
+        style="text-align: right;padding-bottom: 0px;padding-top: 0px;">
+        <button type="button" [disabled]='disableEditType' pButton class="btn btn-black btn-secondary btn-sm" label="OK"
+          (click)="save(oarClinicalGoals,structure.StructureId,'OAR')"></button>&nbsp;
+        <button type="button" pButton class="btn btn-black btn-secondary btn-sm" label="Cancel"
+          (click)="close('OAR')"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
+
+  <p-dialog [draggable]="false" header="Edit Target" [resizable]=false [(visible)]="targetDisplayDialog"
+    showEffect="fade" [modal]="true" [closable]="false" [positionTop]='50' [width]="920">
+    <div *ngIf="targetClinicalGoals" class="container">
+      <div class="row top-buffer">
+        <div class="col-sm-6 col-lg-2">
+          <label for="StructureName">Structure Code</label>
+        </div>
+        <div class="col-sm-5 col-lg-3">
+          <label for="StructureName"> {{structure.Code}}</label>
+        </div>
+        <div class="col-sm-0 col-lg-1"></div>
+        <div class="col-sm-6 col-lg-2">
+          <label for="Meaning">Meaning</label>
+        </div>
+        <div class="col-sm-5 col-lg-3">
+          <label for="Meaning"> {{structure.Meaning}}</label>
+        </div>
+      </div>
+      <div class="row top-buffer">
+        <div class="col-sm-6 col-lg-2">
+          <label for=" TargetName">Name</label>
+        </div>
+        <div class="col-sm-5 col-lg-10">
+          <input class="goal-box" [(ngModel)]="name" maxlength="32"
+            (keyup)="this.name == '' ? this.disableEditType = true : this.goalsValid('Target')"
+            style="font-weight: bold; width: 39%; height: 30px;font-size: 1em;" type="text" class="form-control"
+            (keypress)="OmitSpecialChar($event)">
+        </div>
+      </div>
+      <div class="row top-buffer">
+        <div class="col-sm-12 col-lg-2">
+          <label for="ClinicalGoals">Clinical Goals</label>
+        </div>
+        <div class="col-sm-12 col-lg-10">
+          <table>
+            <tr>
+              <th class="phase-header"> Phase </th>
+              <th class="goal-header"> Goal </th>
+              <th class="variation-header"> Variation </th>
+              <th style="width: 60px;"> Priority </th>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="row top-buffer">
+        <div class="col-sm-0 col-lg-2">
+
+        </div>
+        <div #clinicalGoalList class="col-sm-12 col-lg-10 table-css">
+          <p-table [value]="targetClinicalGoals">
+            <ng-template pTemplate="body" let-i="rowIndex" let-rowIndex="rowIndex" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData" style="border: solid 1px #c0cad3;">
+                <td class="borderless">
+                  <select class="form-control goal-box" style="  height: 30px;"
+                    (change)="onPhaseChange($event.target.value,rowData,'Target')">
+                    <option *ngFor="let phase of phaseAll" [selected]="phase.Value == rowData.Phase"
+                      [value]="phase.Value">{{phase.Name}}
+                    </option>
+                  </select>
+                </td>
+                <td class="borderless">
+                  <app-goal-intellisense (LastRowEmitter)="ScrollInView($event);" [goalSequence]="rowIndex"
+                    (GoalErrorEmitter)="ValidateClinicalGoal($event)"
+                    (GoalEmitter)="updateGoal(rowData,$event,'Target')" [(goal)]="rowData.Goal"
+                    [clinicalGoal]="{rowData :rowData,clinicalG : 'Goal'}"></app-goal-intellisense>
+                </td>
+                <td class="borderless">
+                  <app-goal-intellisense (LastRowEmitter)="ScrollInView($event);" [goalSequence]="rowIndex"
+                    (GoalErrorEmitter)="ValidateClinicalGoal($event)"
+                    (GoalEmitter)="updateVariation(rowData,$event,'Target')" [(goal)]="rowData.Variation"
+                    [clinicalGoal]="{rowData :rowData,clinicalG : 'Variation'}"></app-goal-intellisense>
+                </td>
+                <td style="width: 100px;" class="borderless">
+                  <select class="form-control goal-box" style="  height: 30px;"
+                    (change)="onPriorityChange($event.target.value,rowData,'Target')">
+                    <option *ngFor="let priority of goalPriority" [selected]="priority.Value == rowData.Priority"
+                      [value]="priority.Value">{{priority.Name}}</option>
+                  </select>
+                </td>
+                <td style="width: 5%;" class="borderless">
+                  <span (click)="deleteGoal(rowData,'Target')" class="trash icon-font-size"></span>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+      <div class="row top-buffer">
+        <div class="col-sm-0 col-lg-2">
+        </div>
+        <div class="col-sm-12 col-lg-10">
+          <span title="Add new goal" (click)="addGoal('Target')" class="add icon-font-size"></span>
+        </div>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix"
+        style="text-align: right;padding-bottom: 0px;padding-top: 0px;">
+        <button [disabled]='disableEditType' type="button" class="btn btn-black btn-secondary btn-sm" pButton label="OK"
+          (click)="save(targetClinicalGoals,structure.StructureId,'Target')"></button>&nbsp;
+        <button type="button" class="btn btn-black btn-secondary btn-sm" pButton label="Cancel"
+          (click)="close('Target')"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
+</ng-template>

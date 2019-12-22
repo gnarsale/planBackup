@@ -1,0 +1,277 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import '~bootstrap/dist/css/bootstrap.min.css';
+/* You can add global styles to this file, and also import other style files */
+
+.info-box {
+  border: 1px solid #999999;
+  box-shadow: 3px 3px 5px 2px #ccc;
+  min-height: 40px;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  margin-left: 5%;
+}
+
+.top-buffer { margin-top:20px; }
+
+.info-box span {
+  padding: 5px;
+  margin: 5px;
+  color: #666666;
+}
+
+.info-box .info-box-header {
+  margin: 10px;
+  border-bottom: 1px solid #999999;
+}
+
+.info-box .info-box-value {
+  margin: 10px;
+}
+
+.gtv-box,
+.ctv-box {
+  margin-top: 30px;
+  min-height: 40px;
+  border: 1px solid #999999;
+  box-shadow: 3px 3px 5px 2px #ccc;
+  color: #666666;
+  margin-left: 5%;
+  margin-bottom: 5%;
+}
+
+.target-heading {
+  margin-top: 50px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #666666;
+}
+
+.main-heading {
+  font-size: 16px;
+  font-weight: 600;
+  color: #666666;
+  margin: 20px 0px 10px 0px;
+}
+
+.div-border {
+  border: 2;
+  border-style: solid;
+}
+
+.info-box .target-info-box-header {
+  margin: 10px;
+  border-bottom: 1px solid #999999;
+  margin-left: 5%;
+}
+
+.btn-margin {
+  margin-left: 17px;
+}
+
+.structure-oar-icon {
+  margin-left: 4px;
+  float: right;
+}
+
+.accordin-up {
+  margin-top: 9px;
+}
+
+.accordin-down {
+  margin-top: 7px;
+}
+
+.margin-right-10 {
+  margin-right: 10px;
+}
+
+.goal-box {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.ui-dialog-footer.ui-widget-content {
+  padding-bottom: 0px;
+  padding-top: 0px;
+}
+
+.margin-bottom-5px {
+  margin-bottom: 5px;
+}
+
+.margin-left-5px {
+  margin-left: 5px;
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
+.width-65px {
+  width: 65px;
+  font-weight: bold;
+}
+
+.width-85px {
+  width: 85px;
+  padding-left: 17px;
+  font-weight: bold;
+}
+
+.padding-bottom-9px {
+  padding-bottom: 21px;
+
+}
+
+.font-bold {
+  font-weight: bold;
+  color: #666;
+}
+
+.phase-header {
+  width: 198px;
+  padding-left: 8px;
+}
+
+.goal-header {
+  width: 189px;
+}
+
+.variation-header {
+  width: 194px;
+}
+
+.oar-variation-header {
+  width: 201px;
+}
+
+.oar-goal-header {
+  width: 207px;
+  padding-left: 8px;
+}
+
+.padding-bottom-7px {
+  padding-bottom: 7px;
+}
+
+.card-body {
+  padding: 0px 4px !important;
+
+  .collapsing,
+  .collapse.show {
+    margin: 8px !important;
+  }
+}
+
+.card {
+  margin-top: 9px;
+}
+
+.card-header {
+  padding: 1px 7px 0px 7px;
+  line-height: 26px;
+  background-color: #ffffff;
+}
+
+.borderless {
+  border: none !important;
+}
+
+.target-organ-header {
+  margin-left: 0px;
+  margin-right: 0px;
+  height: 42px;
+}
+
+.meaning {
+  font-size: 11px;
+  position: relative;
+  bottom: 61%;
+  color: #8195a7;
+}
+
+.total-goals {
+  margin: 4px;
+  float: left;
+  font-weight: 700;
+  position: relative;
+  left: 13px;
+}
+
+.edit-font {
+  font-size: 14px;
+  font-weight: 300;
+}
+
+.variation-header-onco {
+  width: 187px;
+  font-style: italic;
+  color: #8195a7;
+  font-weight: 400;
+}
+
+.goal-header-onco {
+  width: 185px;
+  font-style: italic;
+  color: #8195a7;
+  font-weight: 400;
+}
+
+.phase-header-onco {
+  width: 191px;
+  padding-left: 8px;
+  font-style: italic;
+  color: #8195a7;
+  font-weight: 400;
+}
+
+.priority-header-onco {
+  padding-left: 8px;
+  font-style: italic;
+  color: #8195a7;
+  font-weight: 400;
+}
+
+.select {
+  border: none;
+  border-bottom: solid 1px #e7e8e9;
+  border-radius: 0%;
+}
+
+.select:focus {
+  box-shadow: none;
+  border-bottom: solid 1px #e7e8e9;
+}
+
+.header-color {
+  background: white;
+  border-bottom: solid 1px #e7e8e9;
+}
+
+.onco-button-color {
+  color: #ffffff !important;
+  background-color: #394a59 !important;
+  box-shadow: none !important;
+}
+
+.delete-icon {
+  float: right;
+  margin-left: 4px;
+  margin-right: 4px;
+  margin-top: 7px;
+}
+
+.margin-right-12px {
+  margin-right: 12px;
+  float: right
+}
+
+.table-css {
+  min-height: 277px;
+  max-height: 277px;
+  overflow-y: auto;
+  margin-left: 124px;
+  margin-top: -11px;
+}
