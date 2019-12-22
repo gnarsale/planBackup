@@ -1,0 +1,794 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
+/* You can add global styles to this file, and also import other style files */
+.varian {
+  .info-box {
+    border: 1px solid #DCDADF;
+    // box-shadow: 3px 3px 5px 2px #ccc;
+    min-height: 160px;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    margin-left: 5%;
+  }
+
+  .info-box span {
+    color: #666666;
+  }
+
+  .info-box .info-box-header {
+    margin: 10px;
+    border-bottom: 1px solid #DCDADF;
+  }
+
+  .top-buffer { margin-top:20px; }
+
+  .gtv-box,
+  .ctv-box {
+    margin-top: 30px;
+    min-height: 40px;
+    border: 1px solid #999999;
+    box-shadow: 3px 3px 5px 2px #ccc;
+    color: #666666;
+    margin-left: 5%;
+    margin-bottom: 5%;
+  }
+
+  .target-heading {
+    margin-top: 50px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #666666;
+  }
+
+  .main-heading {
+    font-size: 16px;
+    font-weight: 600;
+    color: #666666;
+    margin: 20px 0px 10px 0px;
+  }
+
+  .div-border {
+    padding: 10px;
+  }
+
+  .info-box .target-info-box-header {
+    margin: 10px;
+    border-bottom: 1px solid #999999;
+    margin-left: 5%;
+  }
+
+  .btn-margin {
+    margin-left: 17px;
+  }
+
+
+  fieldset {
+    border: 1px solid #DCDADF !important;
+  }
+
+  .phaseLegend {
+    display: inline;
+    width: 87px;
+    margin-left: 20px;
+    padding-left: 10px;
+    font-size: 15px;
+  }
+
+  .targetLegend {
+    display: inline;
+    width: 92px;
+    margin-left: 20px;
+    padding-left: 10px;
+    font-size: 15px;
+  }
+
+  .oarLegend {
+    display: inline;
+    width: 96px;
+    margin-left: 20px;
+    padding-left: 10px;
+    font-size: 15px;
+  }
+
+  .editPhase {
+    position: absolute;
+    right: 23px;
+    top: 38px;
+  }
+
+  .editNotes {
+    position: absolute;
+    top: 7px;
+    left: 104px;
+  }
+
+  .notesLegend {
+    display: inline;
+    width: 79px;
+    margin-left: 20px;
+    padding-left: 10px;
+    font-size: 15px;
+  }
+
+  .note {
+    margin: 7px 11px 0px 11px;
+    padding: 2px;
+    border: 1px solid #ddd;
+    word-wrap: break-word;
+    border-radius: 6px;
+  }
+
+  .notes-div {
+    height: 91%;
+    overflow: auto;
+  }
+
+  .target-rows .col-sm-6:nth-child(even) {
+    padding-left: 8px !important;
+  }
+
+  .target-rows .col-sm-6:nth-child(odd) {
+    padding-right: 1px !important;
+  }
+
+  .row {
+    padding-top: 0px;
+  }
+
+  .backgroundColor {
+    background-color: #ffffff;
+    overflow: auto;
+  }
+
+
+  /* 
+  body .ui-dialog .ui-dialog-content {
+    background-color: #ffffff;
+  }
+  
+  .ui-dialog.ui-widget .ui-dialog-content {
+    background-color: #ffffff;
+  } */
+
+  div.ui-dialog-content.ui-widget-content {
+    padding: 0px;
+  }
+
+  .margin-Top {
+    margin-top: -18px;
+
+  }
+
+  .padding-18 {
+    padding-bottom: 18px;
+    height: 199px;
+  }
+
+  select.form-control[_ngcontent-c5] {
+    font-size: 1em !important;
+    height: 30px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
+
+  .goal-box {
+    height: 30px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    font-size: 1em;
+  }
+
+  .icon-font-size {
+    font-size: 17px;
+    margin-left: 5px;
+  }
+
+  :host ::ng-deep button {
+    margin-right: .25em;
+  }
+
+  :host ::ng-deep .custom-toast .ui-toast-message {
+    color: #ffffff;
+    background: #FC466B;
+    background: -webkit-linear-gradient(to right, #3F5EFB, #FC466B);
+    background: linear-gradient(to right, #3F5EFB, #FC466B);
+  }
+
+  :host ::ng-deep .custom-toast .ui-toast-close-icon {
+    color: #ffffff;
+  }
+
+  .name-character {
+    display: inline-block;
+    width: 2.5em;
+    height: 2.5em;
+    line-height: 2.5em;
+    text-align: center;
+    border-radius: 50%;
+    background: white;
+    vertical-align: middle;
+    margin-right: 1em;
+    color: #394a59;
+  }
+
+  // .ui-button-text-icon-left .ui-button-text {
+  //   padding: .25em 1em .25em 2.1em !important;
+  // }
+
+  .ui-button-text-icon-left .ui-button-text {
+    padding: 0.1em 1em !important;
+  }
+
+  .ui-dialog-content {
+    padding: 1em 2em !important;
+  }
+
+  .background-color-property {
+    background-color: #f5f5f5;
+  }
+
+  .background-white {
+    background-color: #dfe5eb;
+  }
+
+  body {
+    background-color: #f5f5f5;
+    font-weight: 400;
+  }
+
+  .color-background {
+    background-color: #394a59;
+  }
+
+  .text-color-white {
+    color: white;
+  }
+
+  .padding-top-10px {
+    padding-top: 15px;
+    padding-bottom: 5px;
+  }
+
+  .font-size-12px {
+    font-size: 12px;
+  }
+
+
+  // .form-control {
+  //   border: 1px solid #394A58;
+  // }
+
+  .template-dropdown {
+    background-color: #394A58;
+    color: white;
+    border: 1px solid #394A58;
+  }
+
+  .phase-header {
+    width: 176px;
+    padding-left: 8px;
+  }
+
+  .goal-header {
+    width: 167px;
+  }
+
+  .variation-header {
+    width: 170px;
+  }
+
+  .oar-variation-header {
+    width: 171px;
+  }
+
+  .oar-goal-header {
+    width: 181px;
+    padding-left: 8px;
+  }
+
+  .top-header {
+    border-bottom: 1px solid #DCDADF;
+    margin-left: 11px;
+    margin-right: 11px;
+  }
+
+  .margin-top-11px {
+    margin-top: 11px;
+  }
+
+  .font-size-10px {
+    font-size: 10px;
+    margin-bottom: 0px;
+  }
+
+  div.modal-backdrop.show:nth-of-type(1) {
+    z-index: 1000;
+  }
+
+  .icon-alignment {
+    font-weight: 700;
+    vertical-align: text-bottom;
+    font-size: 14px;
+  }
+
+  .spacing {
+    padding-right: 0px;
+    margin-right: -4px;
+  }
+
+  .fieldset-phase-notes-height {
+    min-height: 199px;
+  }
+
+  .fa-lg {
+    vertical-align: -27%;
+  }
+
+  .margin-top-10px {
+    margin-top: 10px;
+  }
+
+  .margin-top-8px {
+    float: right;
+    margin-top: 8px;
+  }
+
+  .add-organ-target {
+    text-align: right;
+    padding-bottom: 0px;
+    padding-top: 0px;
+  }
+
+  .margin-top-6px {
+    margin-top: 6px !important;
+  }
+
+  .margin-bottom-10px {
+    margin-bottom: 10px !important;
+  }
+
+  .table-css {
+    min-height: 277px;
+    max-height: 277px;
+    overflow-y: auto;
+    margin-left: 124px;
+    margin-top: -18px;
+  }
+
+  // div.ui-dialog-mask{
+  //   z-index: 1003;
+  // }
+
+  // div.ui-confirmdialog{
+  //   z-index: 1004 !important;
+  // }
+
+  @import '../../../../sass/styles.scss';
+
+  @include themify($themes) {
+    .navbar {
+      color: themed('sub-header-color') !important;
+    }
+  }
+
+}
+
+.oncology360 {
+  .info-box {
+    border: 1px solid #DCDADF;
+    // box-shadow: 3px 3px 5px 2px #ccc;
+    min-height: 160px;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    margin-left: 5%;
+  }
+
+  .info-box span {
+    color: #666666;
+  }
+
+  .info-box .info-box-header {
+    margin: 10px;
+    border-bottom: 1px solid #DCDADF;
+  }
+
+  // .info-box .info-box-value {
+  //   margin: 10px;
+  // }
+
+  .gtv-box,
+  .ctv-box {
+    margin-top: 30px;
+    min-height: 40px;
+    border: 1px solid #999999;
+    box-shadow: 3px 3px 5px 2px #ccc;
+    color: #666666;
+    margin-left: 5%;
+    margin-bottom: 5%;
+  }
+
+  .target-heading {
+    margin-top: 50px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #666666;
+  }
+
+  .main-heading {
+    font-size: 16px;
+    font-weight: 600;
+    color: #666666;
+    margin: 20px 0px 10px 0px;
+  }
+
+  .div-border {
+    padding: 10px;
+  }
+
+  .info-box .target-info-box-header {
+    margin: 10px;
+    border-bottom: 1px solid #999999;
+    margin-left: 5%;
+  }
+
+  .btn-margin {
+    margin-left: 17px;
+  }
+
+
+  fieldset {
+    border: 1px solid #DCDADF !important;
+  }
+
+  .phaseLegend {
+    display: inline;
+    width: 87px;
+    margin-left: 20px;
+    padding-left: 10px;
+    font-size: 15px;
+  }
+
+  .targetLegend {
+    display: inline;
+    width: 92px;
+    margin-left: 20px;
+    padding-left: 10px;
+    font-size: 15px;
+  }
+
+  .oarLegend {
+    display: inline;
+    width: 96px;
+    margin-left: 20px;
+    padding-left: 10px;
+    font-size: 15px;
+  }
+
+  .editPhase {
+    position: absolute;
+    right: 23px;
+    top: 38px;
+  }
+
+  .editNotes {
+    position: absolute;
+    top: 7px;
+    left: 104px;
+  }
+
+  .notesLegend {
+    display: inline;
+    width: 79px;
+    margin-left: 20px;
+    padding-left: 10px;
+    font-size: 15px;
+  }
+
+  .note {
+    margin: 7px 11px 0px 11px;
+    padding: 2px;
+    border: 1px solid #ddd;
+    word-wrap: break-word;
+    border-radius: 6px;
+  }
+
+  .notes-div {
+    height: 91%;
+    overflow: auto;
+  }
+
+  .target-rows .col-sm-6:nth-child(even) {
+    padding-left: 8px !important;
+  }
+
+  .target-rows .col-sm-6:nth-child(odd) {
+    padding-right: 1px !important;
+  }
+
+  .row {
+    padding-top: 0px;
+  }
+
+  .backgroundColor {
+    background-color: #ffffff;
+    overflow: auto;
+  }
+
+
+  /* 
+  body .ui-dialog .ui-dialog-content {
+    background-color: #ffffff;
+  }
+  
+  .ui-dialog.ui-widget .ui-dialog-content {
+    background-color: #ffffff;
+  } */
+
+  div.ui-dialog-content.ui-widget-content {
+    padding: 0px;
+  }
+
+  .margin-Top {
+    margin-top: -18px;
+
+  }
+
+  .padding-18 {
+    padding-bottom: 18px;
+    height: 199px;
+  }
+
+  select.form-control[_ngcontent-c5] {
+    font-size: 1em !important;
+    height: 30px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
+
+  .goal-box {
+    height: 30px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    font-size: 1em;
+  }
+
+  :host ::ng-deep button {
+    margin-right: .25em;
+  }
+
+  :host ::ng-deep .custom-toast .ui-toast-message {
+    color: #ffffff;
+    background: #FC466B;
+    background: -webkit-linear-gradient(to right, #3F5EFB, #FC466B);
+    background: linear-gradient(to right, #3F5EFB, #FC466B);
+  }
+
+  :host ::ng-deep .custom-toast .ui-toast-close-icon {
+    color: #ffffff;
+  }
+
+  .name-character {
+    display: inline-block;
+    font-size: 11px;
+    width: 2.5em;
+    height: 2.5em;
+    line-height: 2.5em;
+    text-align: center;
+    border-radius: 50%;
+    background: white;
+    vertical-align: middle;
+    margin-right: 1em;
+    color: #394a59;
+  }
+
+  // .ui-button-text-icon-left .ui-button-text {
+  //   padding: .25em 1em .25em 2.1em !important;
+  // }
+
+  .ui-button-text-icon-left .ui-button-text {
+    padding: 0.1em 1em !important;
+  }
+
+  .ui-dialog-content {
+    padding: 1em 2em !important;
+  }
+
+  .background-color-property {
+    background-color: #f5f5f5;
+  }
+
+  .background-white {
+    background-color: #dfe5eb;
+  }
+
+  body {
+    background-color: #f5f5f5;
+    font-weight: 400;
+  }
+
+  .color-background {
+    background-color: #394a59;
+  }
+
+  .text-color-white {
+    color: white;
+  }
+
+  .padding-top-10px {
+    padding-top: 15px;
+    padding-bottom: 5px;
+  }
+
+  .font-size-12px {
+    font-size: 12px;
+  }
+
+
+  // .form-control {
+  //   border: 1px solid #394A58;
+  // }
+
+  .template-dropdown {
+    background-color: #394A58;
+    color: white;
+    border: 1px solid #394A58;
+  }
+
+  .phase-header {
+    width: 176px;
+    padding-left: 8px;
+  }
+
+  .goal-header {
+    width: 167px;
+    font-style: italic;
+    color: #8195a7;
+    font-weight: 400;
+  }
+
+  .variation-header {
+    width: 170px;
+    font-style: italic;
+    color: #8195a7;
+    font-weight: 400;
+  }
+
+  .oar-variation-header {
+    width: 187px;
+    font-style: italic;
+    color: #8195a7;
+    font-weight: 400;
+  }
+
+  .oar-goal-header {
+    width: 185px;
+    font-style: italic;
+    color: #8195a7;
+    font-weight: 400;
+  }
+
+  .top-header {
+    border-bottom: 1px solid #DCDADF;
+    margin-left: 11px;
+    margin-right: 11px;
+  }
+
+  .margin-top-11px {
+    margin-top: 11px;
+  }
+
+  .font-size-10px {
+    font-size: 10px;
+    margin-bottom: 0px;
+  }
+
+  div.modal-backdrop.show:nth-of-type(1) {
+    z-index: 1000;
+  }
+
+  .icon-alignment {
+    font-weight: 700;
+    vertical-align: text-bottom;
+    font-size: 14px;
+  }
+
+  .spacing {
+    padding-right: 0px;
+    margin-right: -4px;
+  }
+
+  .fieldset-phase-notes-height {
+    min-height: 199px;
+  }
+
+  .fa-lg {
+    vertical-align: -27%;
+  }
+
+  .edit-font {
+    font-size: 14px;
+    font-weight: 300;
+  }
+
+  .phase-header-onco {
+    width: 191px;
+    padding-left: 8px;
+    font-style: italic;
+    color: #8195a7;
+    font-weight: 400;
+  }
+
+  .priority-header-onco {
+    padding-left: 8px;
+    font-style: italic;
+    color: #8195a7;
+    font-weight: 400;
+  }
+
+  .select {
+    border: none;
+    border-bottom: solid 1px #e7e8e9;
+    border-radius: 0%;
+  }
+
+  .select:focus {
+    box-shadow: none;
+    border-bottom: solid 1px #e7e8e9;
+  }
+
+  .borderless {
+    border: none !important;
+  }
+
+  .margin-top-10px {
+    margin-top: 10px;
+  }
+
+  .margin-top-8px {
+    float: right;
+    margin-top: 8px;
+  }
+
+  .add-organ-target {
+    text-align: right;
+    padding-bottom: 0px;
+    padding-top: 0px;
+  }
+
+  .margin-top-6px {
+    margin-top: 6px !important;
+  }
+
+  .margin-bottom-10px {
+    margin-bottom: 10px !important;
+  }
+
+  .table-css {
+    min-height: 277px;
+    max-height: 277px;
+    overflow-y: auto;
+    margin-left: 124px;
+    margin-top: -18px;
+  }
+
+  // div.ui-dialog-mask{
+  //   z-index: 1003;
+  // }
+
+  // div.ui-confirmdialog{
+  //   z-index: 1004 !important;
+  // }
+
+  @import '../../../../sass/styles.scss';
+
+  @include themify($themes) {
+    .navbar {
+      color: themed('sub-header-color') !important;
+    }
+  }
+
+}

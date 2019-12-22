@@ -1,0 +1,763 @@
+<ng-container *ngIf="styleConfigured==='oncology360',else varian">
+  <nav class="navbar navbar-expand-sm row color-background" style="padding: 4px 0px 4px 0px;">
+    <div style="margin-left: 28px;">
+      <div class="name-character ">
+        <b>{{patientFirstNameCharacter}}{{patientLastNameCharacter}}</b>
+      </div>
+    </div>
+    <div class="text-color-white" style="padding-right: 10px;border-right: 1px solid; ">
+      <span class="font-size-11px"> {{patient.Name | titleCase }}</span>
+      <p class="font-size-10px">{{structuresetId}} <span style="font-weight: 400">|</span> {{patient.ID}}</p>
+    </div>
+    <div class="text-color-white row" style="margin-left: 10px; ">
+      <div class="col-sm-12">
+        <form class="form-inline" ng-app="">
+          <span class="font-size-11px">{{TemplateSiteName.siteName}} :
+            <select class="form-control template-dropdown" style="height: 29px;margin-bottom: 3px;"
+              (change)='templateChanged($event.target.value, this.templateId)'>
+              <option [selected]=" this.templateId == 0" value=0>No Template</option>
+              <option *ngFor="let template of allTemplates"
+                [selected]=" this.templateId == template.PlanDirectiveTemplateID"
+                [value]="template.PlanDirectiveTemplateID">{{template.PlanDirectiveTemplateName}}</option>
+            </select></span>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <div id="directiveDetails" style="background-color: #f5f5f5;">
+    <div class="container-fluid padding-top-10px">
+      <div class="row background-color-property">
+        <div class="col-md-9 spacing">
+          <fieldset class="background-white fieldset-phase-notes-height">
+
+            <div class="top-header">
+              <div>
+                <span class="icon-alignment" *ngIf="phaseLength == 1">{{phaseLength}} Phase</span>
+                <span *ngIf="phaseLength > 1"> <span class="icon-alignment">{{phaseLength}} Phases</span></span> <span
+                  (click)="openEditPopup()" class="edit icon-font-size">
+                </span>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="container-fluid" style=" margin-top: -8px;">
+                <app-plan-directive-phase></app-plan-directive-phase>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="col-md-3 padding-left-8 " *ngIf="notesArray">
+          <fieldset class="padding-18" [ngStyle]="{'min-height':phaseLength >=3 ? '213px' : '199px'}"
+            style="background-color: #dfe5eb;">
+
+            <div class="top-header">
+              <span class="icon-alignment">Notes</span> <span (click)="openNotesPopup()" class="add icon-font-size">
+              </span>
+            </div>
+            <div #notesDiv class="notes-div col-md-12">
+              <form novalidate #notes="ngForm" *ngIf="displayAddNotes">
+                <div class="row">
+                  <div class="NotesArea col-md-10 form-group">
+                    <textarea #note #note="ngModel" (change)="AddEditNotes(notes.value, 0, 'Add')" required
+                      class="form-control" name="commentNotes" rows="2" ngModel></textarea>
+                  </div>
+                  <div class="col-md-1">
+
+                    <span (click)="displayAddNotes = false" style="float: right;margin-top: 16px;"
+                      class="remove icon-font-size"></span>
+                  </div>
+                </div>
+              </form>
+              <div class="row">
+                <div class="note col-md-11" *ngFor="let note of notesArray.slice().reverse(), let i = index"
+                  style="background-color: #ffffff;">
+                  <div [hidden]="editNotes[notesArray.length - i - 1]">
+                    <div class="col-md-12">
+                      <span>
+                        <i style="font-size: 10px;"> Updated By : {{note.UpdatedBy}}</i>
+                      </span>
+                      <span class="pull-right">
+                        <i style="font-size: 10px;">{{note.TimeStamp | date: 'd MMM y, h:mm a'}}</i>
+                      </span>
+                    </div>
+                    <div class="col-md-12">
+                      {{note.Comment}}
+                      <span [hidden]="displayAddNotes" class="edit pull-right"
+                        (click)="displayEditNotes(notesArray.length - i - 1)">
+                      </span>
+                    </div>
+                  </div>
+                  <form novalidate #editedNotes="ngForm">
+                    <div class="row" *ngIf="editNotes[notesArray.length - i - 1]">
+                      <div class="col-md-10">
+                        <textarea #note (focusout)="AddEditNotes(editedNotes.value, notesArray.length - i - 1, 'Edit')"
+                          [ngModel]="this.notesArray[notesArray.length - i - 1]['Comment']" required
+                          class="form-control" name="commentNotes" rows="2" ngModel></textarea>
+                      </div>
+                      <div class="col-md-1">
+
+                        <span (click)="editNotes[notesArray.length - i - 1] = false"
+                          class="remove icon-font-size margin-top-8px"></span>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+
+      <div class="row margin-top-11px background-color-property">
+        <div class=" col-md-6 spacing">
+          <fieldset class="background-white ">
+
+            <div class="top-header">
+              <span class="icon-alignment">{{structuresInfo.length}} Targets</span><span class="add icon-font-size"
+                (click)="Add('Target')">
+              </span>
+            </div>
+
+
+            <div class="target-rows row div-border">
+              <div class="col-sm-6 margin-bottom-10" *ngFor="let structure of structuresInfo">
+                <app-structure (controlTouch)="controlStatusCheck($event)" [typeD]='readwrite' [Structure]="structure"
+                  [PhaseD]="phaseAll"></app-structure>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="padding-left-8 col-md-6">
+          <fieldset class="background-white">
+
+
+            <div class="top-header">
+              <span class="icon-alignment">{{oarStructureLength}} Organs</span> <span (click)="Add('OAR')"
+                class="add icon-font-size">
+              </span>
+            </div>
+
+            <div class="target-rows row div-border">
+              <div class="col-sm-6 margin-bottom-10" *ngFor="let oarstructure of oarStructureInfo">
+                <app-structure (controlTouch)="controlStatusCheck($event)" [typeD]='readwrite'
+                  [Structure]="oarstructure" [PhaseD]="phaseAll"></app-structure>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="col-md-12" style="margin: 30px 0;">
+          <div class="text-center">
+            <button *ngIf="!editMode" class="btn btn-black btn-md  btn-margin"
+              (click)="GoToPlanDirective()">Back</button>
+            <button [disabled]="disableSaveOptions && editMode" class="btn btn-black btn-md  btn-margin"
+              (click)='saveTemplate()'>Save</button>
+            <button [disabled]="disableSaveOptions && editMode" class="btn btn-black btn-md  btn-margin"
+              (click)='showTemplateSaveAsDialog()'>Save
+              As New Template</button>
+            <button [disabled]="disableSaveOptions && editMode" class="btn btn-black btn-md  btn-margin"
+              data-toggle="modal" data-target="#submitOrder">Save
+              & Submit</button>
+            <button class="btn btn-black btn-md  btn-margin" (click)="GoToOrders()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <app-edit-phase (controlTouch)="controlStatusCheck($event)" [ShowDialog]="showEditDialog"></app-edit-phase>
+
+    <p-dialog [draggable]="false" header="Add {{Type}}" [(visible)]="displayDialog" [responsive]="true"
+      [resizable]=false showEffect="fade" [modal]="true" [closable]="false" [positionTop]='50' [width]="920">
+      <div *ngIf="clinicalGoals" class="container">
+        <div class="row top-buffer">
+          <div class="col-sm-6 col-lg-2">
+            <label for="StructureName">Structure Code</label>
+          </div>
+          <div class="col-sm-6 col-lg-3">
+            <select required class="form-control" [ngModel]="Structure" (ngModelChange)="SetStructure($event)">
+              <option *ngFor="let Structure of StructureCollection" [ngValue]="Structure">{{Structure.Code}}</option>
+            </select>
+          </div>
+          <div class="col-sm-0 col-lg-1"></div>
+          <div class="col-sm-6 col-lg-2">
+            <label for="Meaning">Meaning</label>
+          </div>
+          <div class="col-sm-6 col-lg-3">
+            {{ this.Structure["Meaning"] }}
+          </div>
+        </div>
+        <div [class]="Type === 'Target' ?'row top-buffer' : 'row'">
+          <div *ngIf="clinicalGoals && Type === 'Target'" class="col-sm-6 col-lg-2">
+            <label for="TargetName">Name</label>
+          </div>
+          <div *ngIf="Type === 'Target'" class="col-sm-6 col-lg-10">
+            <input class="goal-box" (input)="goalsValid()" [(ngModel)]="Structure.Name" maxlength="32"
+              style="font-weight: bold; height: 30px; width: 39%; font-size: 1em;" [(ngModel)]="name" type="text"
+              class="form-control" (keypress)="OmitSpecialChar($event)">
+          </div>
+        </div>
+        <div class="row top-buffer">
+          <div class="col-sm-12 col-lg-2">
+            <label for="ClinicalGoals">Clinical Goals</label>
+          </div>
+          <div class="col-sm-12 col-lg-10">
+            <table>
+              <tr>
+                <th class="phase-header"> Phase </th>
+                <th [class]="isTarget ?'goal-header' : 'oar-goal-header'"> Goal </th>
+                <th class="isTarget ? variation-header : oar-variation-header"> Variation </th>
+                <th style="width: 60px;"> Priority </th>
+                <th style="width: 15px;"></th>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="row top-buffer">
+          <div class="col-sm-0 col-lg-2">
+
+          </div>
+          <div #clinicalGoalList class="col-sm-12 col-lg-10 table-css">
+            <p-table [value]="clinicalGoals">
+              <ng-template pTemplate="body" let-rowIndex="rowIndex" let-rowData let-columns="columns">
+                <tr [pSelectableRow]="rowData">
+                  <td>
+                    <select class="form-control" (change)="onPhaseChange($event.target.value,rowData)">
+                      <option *ngFor="let phase of phaseAll" [value]="phase.Value">{{phase.Name}} </option>
+                    </select>
+                  </td>
+                  <td>
+                    <app-goal-intellisense (LastRowEmitter)="ScrollInView($event);" [goalSequence]="rowIndex"
+                      (GoalErrorEmitter)="validateClinicalGoal($event)" (GoalEmitter)="updateGoal(rowData, $event)"
+                      [(goal)]="rowData.Goal" [clinicalGoal]="{rowData :rowData,clinicalG : 'Goal'}">
+                    </app-goal-intellisense>
+                  </td>
+                  <td>
+                    <app-goal-intellisense (LastRowEmitter)="ScrollInView($event);" [goalSequence]="rowIndex"
+                      (GoalErrorEmitter)="validateClinicalGoal($event)" (GoalEmitter)="updateVariation(rowData,$event)"
+                      [(goal)]="rowData.Variation" [clinicalGoal]="{rowData :rowData,clinicalG : 'Variation'}">
+                    </app-goal-intellisense>
+                  </td>
+                  <td>
+                    <select class="form-control " (change)="onPriorityChange($event.target.value,rowData)">
+                      <option *ngFor="let priority of goalPriority" [value]="priority.Value">{{priority.Name}} </option>
+                    </select>
+                  </td>
+                  <td style="width: 5%;">
+                    <span (click)="deleteGoal(rowData)" class="trash icon-font-size"></span>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+        <div class="row top-buffer">
+          <div class="col-sm-0 col-lg-2">
+
+          </div>
+          <div class="col-sm-12 col-lg-10">
+            <span title="Add new goal" (click)="addGoal()" class="add icon-font-size"></span>
+          </div>
+        </div>
+      </div>
+      <p-footer>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix add-organ-target">
+          <button type="button" [disabled]="disableAddType" pButton class="btn btn-black btn-secondary btn-sm"
+            label="OK" (click)="save(clinicalGoals,isTarget)"></button>&nbsp;
+          <button type="button" pButton class="btn btn-black btn-secondary btn-sm" label="Cancel"
+            (click)="close()"></button>
+        </div>
+      </p-footer>
+    </p-dialog>
+
+    <p-dialog [draggable]="false" header="Save as new Template" [(visible)]="display" [maximizable]=false
+      [resizable]=false showEffect="fade" [modal]="true" [closable]="false" [minHeight]="130" [width]="521">
+      <div>
+        <input class="form-control" value={{TemplateSiteName.templateName}} style="width: 100% " type="text"
+          placeholder="Enter the Template Name" [(ngModel)]="newTemplateName">
+      </div>
+      <div style="padding-top:0px; margin-top: 16px;"
+        *ngIf='templateId > 0 && newTemplateName === TemplateSiteName.templateName'
+        class="alert alert-danger alert-dismissible">
+        New template name should not be same as existing template but should be similar to existing one.
+      </div>
+      <p-footer>
+        <button type="button" [disabled]='newTemplateName === TemplateSiteName.templateName' pButton
+          (click)="onSaveTemplateName()" class="btn-black" style="padding: 1.5px 22px !important;" label="Yes"></button>
+        <button type="button" pButton (click)="cancelSaveTemplateName()" class="btn-black"
+          style="padding: 1.5px 22px !important;" label="Cancel"></button>
+      </p-footer>
+    </p-dialog>
+
+    <div class="modal fade" tabindex="-1" data-backdrop="static" style="z-index: 1002;" id="submitOrder">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <span> Place Order</span>
+            <button type="button" #closeCustomTemplateCreate class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form [formGroup]="placeOrderForm">
+              <div class="row col-md-12">
+                <div class="col-md-4 margin-top-6px"><span>Priority</span></div>
+                <div class="col-md-8 formGroup margin-bottom-10px"
+                  [ngClass]="{'has-danger': placeOrderForm.controls.priority.invalid && (placeOrderForm.controls.priority.touched || placeOrderForm.controls.priority.dirty)}">
+                  <select class="form-control" formControlName="priority" style="width: 123px; height: 30px"
+                    (change)="updateSubmitOrderDetails($event.target.value)">
+                    <option value="">--Select--</option>
+                    <option *ngFor="let prior of priorityOptions" [value]="prior.id">
+                      <div> {{prior.priority}}</div>
+                    </option>
+                  </select>
+                  <div class="form-control-feedback"
+                    *ngIf="placeOrderForm.controls.priority.errors && (placeOrderForm.controls.priority.dirty || placeOrderForm.controls.priority.touched)">
+                    <p *ngIf="placeOrderForm.controls.priority.errors.required">Priority is required</p>
+                  </div>
+                </div>
+              </div>
+              <div class="row col-md-12">
+                <div class="col-md-4 margin-top-6px"><span>Machine Id</span></div>
+                <div class="col-md-8 formGroup margin-bottom-10px"
+                  [ngClass]="{'has-danger': placeOrderForm.controls.machineid.invalid && (placeOrderForm.controls.machineid.touched || placeOrderForm.controls.machineid.dirty)}">
+                  <select class="form-control" formControlName="machineid" style="width: 123px; height: 30px"
+                    (change)="objSubmitOrder.MachineID = $event.target.value">
+                    <option value="" selected>--Select--</option>
+                    <option *ngFor="let machineid of machineID; let i = index;" [value]="machineid">{{machineid}}
+                    </option>
+                  </select>
+                  <div class="form-control-feedback"
+                    *ngIf="placeOrderForm.controls.machineid.errors && (placeOrderForm.controls.machineid.dirty || placeOrderForm.controls.machineid.touched)">
+                    <p *ngIf="placeOrderForm.controls.machineid.errors.required">Machine Id is required</p>
+                  </div>
+                </div>
+              </div>
+              <div class="row col-md-12">
+                <div class="col-md-4 margin-top-6px">
+                  <span>Order Notes</span>
+                </div>
+                <div class="col-md-8 formGroup margin-bottom-10px">
+                  <textarea class="form-control" maxlength="255" style="resize:none;" formControlName="plannotes"
+                    cols="40" placeholder="Enter Plan Order Notes" [(ngModel)]="objSubmitOrder.PlanNotes"
+                    rows="7"></textarea>
+                  <div class="form-control-feedback"
+                    *ngIf="placeOrderForm.controls.plannotes.dirty || placeOrderForm.controls.plannotes.touched">
+                    <p><b>{{placeOrderForm.controls.plannotes.value.length}}/255</b></p>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <div>
+              <button data-dismiss="modal" #closeSubmitOrder class="btn btn-black btn-md btn-margin">Back</button>
+              <button [disabled]="!placeOrderForm.valid" (click)="SaveAndSubmitTemplate()"
+                class="btn btn-black btn-md btn-margin">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-template #varian>
+  <nav class="navbar navbar-expand-sm row color-background" style="padding: 4px 0px 4px 0px;">
+    <div style="margin-left: 28px;">
+      <div class="name-character">
+        <b>{{patientFirstNameCharacter}}{{patientLastNameCharacter}}</b>
+      </div>
+    </div>
+    <div class="text-color-white" style="padding-right: 10px;border-right: 1px solid; ">
+      <span class="font-size-11px"> {{patient.Name | titleCase }}</span>
+      <p class="font-size-10px">{{structuresetId}} <span style="font-weight: 400">|</span> {{patient.ID}}</p>
+    </div>
+    <div class="text-color-white row" style="margin-left: 10px; ">
+      <div class="col-sm-12">
+        <form class="form-inline" ng-app="">
+          <span class="font-size-11px">{{TemplateSiteName.siteName}} :
+            <select class="form-control template-dropdown" style="height: 29px;margin-bottom: 3px;"
+              (change)='templateChanged($event.target.value, this.templateId)'>
+              <option [selected]=" this.templateId == 0" value=0>No Template</option>
+              <option *ngFor="let template of allTemplates"
+                [selected]=" this.templateId == template.PlanDirectiveTemplateID"
+                [value]="template.PlanDirectiveTemplateID">{{template.PlanDirectiveTemplateName}}</option>
+            </select></span>
+        </form>
+      </div>
+    </div>
+  </nav>
+  <div id="directiveDetails" style="background-color: #f5f5f5;">
+    <div class="container-fluid padding-top-10px">
+      <div class="row background-color-property">
+        <div class="col-md-9 spacing">
+          <fieldset class="background-white fieldset-phase-notes-height">
+
+            <div class="top-header">
+              <div>
+                <span class="icon-alignment" *ngIf="phaseLength == 1">{{phaseLength}} Phase</span>
+                <span *ngIf="phaseLength > 1"> <span class="icon-alignment">{{phaseLength}} Phases</span></span> <span
+                  (click)="openEditPopup()" class="edit icon-font-size">
+                </span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="container-fluid" style=" margin-top: -8px;">
+                <app-plan-directive-phase></app-plan-directive-phase>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="col-md-3 padding-left-8 " *ngIf="notesArray">
+          <fieldset class="padding-18" [ngClass]="{'min-height':phaseLength >=3 ? '213px' : '199px'}"
+            style="background-color: #dfe5eb;">
+            <div class="top-header">
+              <span class="icon-alignment">Notes</span> <span (click)="openNotesPopup()" class="add icon-font-size">
+              </span>
+            </div>
+            <div #notesDiv class="notes-div col-md-12">
+              <form novalidate #notes="ngForm" *ngIf="displayAddNotes">
+                <div class="row">
+                  <div class=" col-md-10 form-group">
+                    <textarea #note #note="ngModel" (keydown.tab)="AddEditNotes(notes.value, 0, 'Add')" required
+                      style="margin-top: 10px;" class="form-control" name="commentNotes" rows="7" ngModel></textarea>
+                  </div>
+                  <div class="col-md-1">
+                    <span (click)="displayAddNotes = false" style="float: right;margin-top: 16px;"
+                      class="remove icon-font-size"></span>
+                  </div>
+                </div>
+              </form>
+              <div class="row">
+                <div class="note col-md-11" *ngFor="let note of notesArray.slice().reverse(), let i = index"
+                  style="background-color: #ffffff;">
+                  <div [hidden]="editNotes[notesArray.length - i - 1]">
+                    <div class="col-md-12">
+                      <span>
+                        <i style="font-size: 10px;"> Updated By : {{note.UpdatedBy}}</i>
+                      </span>
+                      <span class="pull-right">
+                        <i style="font-size: 10px;">{{note.TimeStamp | date: 'd MMM y, h:mm a'}}</i>
+                      </span>
+                    </div>
+                    <div class="col-md-12">
+                      {{note.Comment}}
+                      <span [hidden]="displayAddNotes" class="edit pull-right"
+                        (click)="displayEditNotes(notesArray.length - i - 1)">
+                      </span>
+                    </div>
+                  </div>
+                  <form novalidate #editedNotes="ngForm">
+                    <div class="row" *ngIf="editNotes[notesArray.length - i - 1]">
+                      <div class="col-md-10">
+                        <textarea #note
+                          (keydown.tab)="AddEditNotes(editedNotes.value, notesArray.length - i - 1, 'Edit',$event)"
+                          [ngModel]="this.notesArray[notesArray.length - i - 1]['Comment']" required
+                          class="form-control" name="commentNotes" rows="7" ngModel></textarea>
+                      </div>
+                      <div class="col-md-1">
+                        <span (click)="editNotes[notesArray.length - i - 1] = false"
+                          class="remove icon-font-size margin-top-8px"></span>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+
+      <div class="row margin-top-11px background-color-property">
+        <div class=" col-md-6 spacing">
+          <fieldset class="background-white ">
+            <div class="top-header">
+              <span class="icon-alignment">{{structuresInfo.length}} Targets</span><span class="add icon-font-size"
+                (click)="Add('Target')">
+              </span>
+            </div>
+
+
+            <div class="target-rows row div-border">
+              <div class="col-sm-6 margin-bottom-10" *ngFor="let structure of structuresInfo">
+                <app-structure (controlTouch)="controlStatusCheck($event)" [typeD]='readwrite' [Structure]="structure"
+                  [PhaseD]="phaseAll"></app-structure>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="padding-left-8 col-md-6">
+          <fieldset class="background-white">
+            <div class="top-header">
+              <span class="icon-alignment">{{oarStructureLength}} Organs</span> <span (click)="Add('OAR')"
+                class="add icon-font-size">
+              </span>
+            </div>
+
+            <div class="target-rows row div-border">
+              <div class="col-sm-6 margin-bottom-10" *ngFor="let oarstructure of oarStructureInfo">
+                <app-structure (controlTouch)="controlStatusCheck($event)" [typeD]='readwrite'
+                  [Structure]="oarstructure" [PhaseD]="phaseAll"></app-structure>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="col-md-12" style="margin: 30px 0;">
+          <div class="text-center">
+            <button *ngIf="!editMode" class="btn btn-black btn-md  btn-margin"
+              (click)="GoToPlanDirective()">Back</button>
+            <button [disabled]="disableSaveOptions  && editMode" class="btn btn-black btn-md  btn-margin"
+              (click)='saveTemplate()'>Save</button>
+            <button [disabled]="disableSaveOptions " class="btn btn-black btn-md  btn-margin"
+              (click)='showTemplateSaveAsDialog()'>Save
+              As New Template</button>
+            <button [disabled]="disableSaveOptions  && editMode" class="btn btn-black btn-md  btn-margin"
+              data-toggle="modal" data-target="#submitOrder">Save
+              & Submit</button>
+            <button class="btn btn-black btn-md  btn-margin" (click)="GoToOrders()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <app-edit-phase (controlTouch)="controlStatusCheck($event)" [ShowDialog]="showEditDialog"></app-edit-phase>
+
+    <p-dialog [draggable]="false" header="Add {{Type}}" [(visible)]="displayDialog" [responsive]="true"
+      [resizable]=false showEffect="fade" [modal]="true" [closable]="false" [positionTop]='50' [width]="920">
+      <div *ngIf="clinicalGoals" class="container">
+        <div class="row top-buffer">
+          <div class="col-sm-6 col-lg-2">
+            <label for="StructureName">Structure Code</label>
+          </div>
+          <div class="col-sm-6 col-lg-3">
+            <select required class="form-control" [ngModel]="Structure" (ngModelChange)="SetStructure($event)">
+              <option *ngFor="let Structure of StructureCollection" [ngValue]="Structure">{{Structure.Code}}</option>
+            </select>
+          </div>
+          <div class="col-sm-0 col-lg-1"></div>
+          <div class="col-sm-6 col-lg-2">
+            <label for="Meaning">Meaning</label>
+          </div>
+          <div class="col-sm-6 col-lg-3">
+            {{ this.Structure["Meaning"] }}
+          </div>
+        </div>
+        <div [class]="Type === 'Target' ?'row top-buffer' : 'row'">
+          <div *ngIf="clinicalGoals && Type === 'Target'" class="col-sm-6 col-lg-2">
+            <label for="TargetName">Name</label>
+          </div>
+          <div *ngIf="Type === 'Target'" class="col-sm-6 col-lg-10">
+            <input class="goal-box" (input)="goalsValid()" [(ngModel)]="Structure.Name" maxlength="32"
+              style="font-weight: bold; height: 30px; width: 39%; font-size: 1em;" [(ngModel)]="name" type="text"
+              class="form-control" (keypress)="OmitSpecialChar($event)">
+          </div>
+        </div>
+        <div class="row top-buffer">
+          <div class="col-sm-12 col-lg-2">
+            <label for="ClinicalGoals">Clinical Goals</label>
+          </div>
+          <div class="col-sm-12 col-lg-10">
+            <table>
+              <tr>
+                <th class="phase-header"> Phase </th>
+                <th [class]="isTarget ?'goal-header' : 'oar-goal-header'"> Goal </th>
+                <th class="isTarget ? variation-header : oar-variation-header"> Variation </th>
+                <th style="width: 60px;"> Priority </th>
+                <th style="width: 15px;"></th>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="row top-buffer">
+          <div class="col-sm-0 col-lg-2">
+
+          </div>
+          <div #clinicalGoalList class="col-sm-12 col-lg-10 table-css">
+            <p-table [value]="clinicalGoals">
+              <ng-template pTemplate="body" let-rowIndex="rowIndex" let-rowData let-columns="columns">
+                <tr [pSelectableRow]="rowData">
+                  <td>
+                    <select class="form-control" (change)="onPhaseChange($event.target.value,rowData)">
+                      <option *ngFor="let phase of phaseAll" [value]="phase.Value">{{phase.Name}} </option>
+                    </select>
+                  </td>
+                  <td>
+                    <app-goal-intellisense (LastRowEmitter)="ScrollInView($event);" [goalSequence]="rowIndex"
+                      (GoalErrorEmitter)="validateClinicalGoal($event)" (GoalEmitter)="updateGoal(rowData, $event)"
+                      [(goal)]="rowData.Goal" [clinicalGoal]="{rowData :rowData,clinicalG : 'Goal'}">
+                    </app-goal-intellisense>
+                  </td>
+                  <td>
+                    <app-goal-intellisense (LastRowEmitter)="ScrollInView($event);" [goalSequence]="rowIndex"
+                      (GoalErrorEmitter)="validateClinicalGoal($event)" (GoalEmitter)="updateVariation(rowData,$event)"
+                      [(goal)]="rowData.Variation" [clinicalGoal]="{rowData :rowData,clinicalG : 'Variation'}">
+                    </app-goal-intellisense>
+                  </td>
+                  <td>
+                    <select class="form-control " (change)="onPriorityChange($event.target.value,rowData)">
+                      <option *ngFor="let priority of goalPriority" [value]="priority.Value">{{priority.Name}} </option>
+                    </select>
+                  </td>
+                  <td style="width: 5%;">
+                    <span (click)="deleteGoal(rowData)" class="trash icon-font-size"></span>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+        <div class="row top-buffer">
+          <div class="col-sm-0 col-lg-2">
+
+          </div>
+          <div class="col-sm-12 col-lg-10">
+            <span title="Add new goal" (click)="addGoal()" class="add icon-font-size"></span>
+          </div>
+        </div>
+      </div>
+      <p-footer>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix add-organ-target">
+          <button type="button" [disabled]="disableAddType" pButton class="btn btn-black btn-secondary btn-sm"
+            label="OK" (click)="save(clinicalGoals,isTarget)"></button>&nbsp;
+          <button type="button" pButton class="btn btn-black btn-secondary btn-sm" label="Cancel"
+            (click)="close()"></button>
+        </div>
+      </p-footer>
+    </p-dialog>
+
+    <p-dialog [draggable]="false" header="Save as new Template" [(visible)]="display" [maximizable]=false
+      [resizable]=false showEffect="fade" [modal]="true" [closable]="false" [minHeight]="130" [width]="521">
+      <div>
+        <input class="form-control" value={{TemplateSiteName.templateName}} style="width: 100% " type="text"
+          placeholder="Enter the Template Name" [(ngModel)]="newTemplateName">
+      </div>
+      <div style="padding-top:0px; margin-top: 16px;"
+        *ngIf='templateId > 0 && newTemplateName === TemplateSiteName.templateName'
+        class="alert alert-danger alert-dismissible">
+        New template name should not be same as existing template but should be similar to existing one.
+      </div>
+      <p-footer>
+        <button type="button" [disabled]='newTemplateName === TemplateSiteName.templateName' pButton
+          (click)="onSaveTemplateName()" class="btn-black" style="padding: 1.5px 22px !important;" label="Yes"></button>
+        <button type="button" pButton (click)="cancelSaveTemplateName()" class="btn-black"
+          style="padding: 1.5px 22px !important;" label="Cancel"></button>
+      </p-footer>
+    </p-dialog>
+
+    <div class="modal fade" tabindex="-1" data-backdrop="static" id="submitOrder">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <span> Place Order</span>
+            <button type="button" #closeCustomTemplateCreate class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form [formGroup]="placeOrderForm">
+              <div class="row col-md-12">
+                <div class="col-md-4 margin-top-6px"><span>Priority</span></div>
+                <div class="col-md-8 formGroup margin-bottom-10px"
+                  [ngClass]="{'has-danger': placeOrderForm.controls.priority.invalid && (placeOrderForm.controls.priority.touched || placeOrderForm.controls.priority.dirty)}">
+                  <select class="form-control" formControlName="priority" style="width: 123px; height: 30px"
+                    (change)="updateSubmitOrderDetails($event.target.value)">
+                    <option value="">--Select--</option>
+                    <option *ngFor="let prior of priorityOptions" [value]="prior.id">
+                      <div> {{prior.priority}}</div>
+                    </option>
+                  </select>
+                  <div class="form-control-feedback"
+                    *ngIf="placeOrderForm.controls.priority.errors && (placeOrderForm.controls.priority.dirty || placeOrderForm.controls.priority.touched)">
+                    <p *ngIf="placeOrderForm.controls.priority.errors.required">Priority is required</p>
+                  </div>
+                </div>
+              </div>
+              <div class="row col-md-12">
+                <div class="col-md-4 margin-top-6px"><span>Machine Id</span></div>
+                <div class="col-md-8 formGroup margin-bottom-10px"
+                  [ngClass]="{'has-danger': placeOrderForm.controls.machineid.invalid && (placeOrderForm.controls.machineid.touched || placeOrderForm.controls.machineid.dirty)}">
+                  <select class="form-control" formControlName="machineid" style="width: 123px; height: 30px"
+                    (change)="objSubmitOrder.MachineID = $event.target.value">
+                    <option value="" selected>--Select--</option>
+                    <option *ngFor="let machineid of machineID; let i = index;" [value]="machineid">{{machineid}}
+                    </option>
+                  </select>
+                  <div class="form-control-feedback"
+                    *ngIf="placeOrderForm.controls.machineid.errors && (placeOrderForm.controls.machineid.dirty || placeOrderForm.controls.machineid.touched)">
+                    <p *ngIf="placeOrderForm.controls.machineid.errors.required">Machine Id is required</p>
+                  </div>
+                </div>
+              </div>
+              <div class="row col-md-12">
+                <div class="col-md-4 margin-top-6px">
+                  <span>Order Notes</span>
+                </div>
+                <div class="col-md-8 formGroup margin-bottom-10px">
+                  <textarea class="form-control" maxlength="255" style="resize:none;" formControlName="plannotes"
+                    placeholder="Enter Plan Order Notes" [(ngModel)]="objSubmitOrder.PlanNotes" rows="7"></textarea>
+                  <div class="form-control-feedback"
+                    *ngIf="placeOrderForm.controls.plannotes.dirty || placeOrderForm.controls.plannotes.touched">
+                    <p><b>{{placeOrderForm.controls.plannotes.value.length}}/255</b></p>
+                  </div>
+                </div>
+              </div>
+              <div class="row col-md-12">
+                <div class="col-md-4 margin-top-6px">
+                  <span>RePlan</span>
+                </div>
+                <div class="col-md-8 formGroup margin-bottom-10px">
+                  <input type="checkbox" formControlName="RePlanCheckbox" data-md-icheck
+                    (change)="RePlanSelectedChangedEvent($event)" />
+                </div>
+              </div>
+              <div class="row col-md-12" *ngIf="RePlanCheckbox">
+                <div class="col-md-4 margin-top-6px">
+                  <span>Completed Order </span>
+                </div>
+                <div class="col-md-8 formGroup margin-bottom-10px"
+                  [ngClass]="{'has-danger': placeOrderForm.controls.completedOrderId.invalid && (placeOrderForm.controls.completedOrderId.touched || placeOrderForm.controls.completedOrderId.dirty)}">
+                  <select class="form-control" formControlName="completedOrderId" style="width: 123px; height: 30px"
+                    (change)="objSubmitOrder.completedOrderId = $event.target.value">
+                    <option value="" selected>--Select--</option>
+                    <option *ngFor="let order of completedOrderId;let i=index;" [value]=order>{{order}}</option>
+                  </select>
+                  <div class="form-control-feedback"
+                    *ngIf="placeOrderForm.controls.completedOrderId.errors && (placeOrderForm.controls.completedOrderId.dirty || placeOrderForm.controls.completedOrderId.touched)">
+                    <p *ngIf="placeOrderForm.controls.completedOrderId.errors.required">OrderId is required</p>
+
+                  </div>
+                  <p style="color: red" *ngIf="completedOrderId.length===0">There are no previous order for this
+                    patient</p>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <div>
+              <button data-dismiss="modal" #closeSubmitOrder class="btn btn-black btn-md btn-margin">Back</button>
+              <button [disabled]="!placeOrderForm.valid" (click)="SaveAndSubmitTemplate()"
+                class="btn btn-black btn-md btn-margin">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <!-- TO DO : fetch selected region id on third page -->
+      <app-plan-directive-without-template [selectedSiteId]="siteId" [orderId]="orderId"
+        [selectedregionId]="selectedregionId"></app-plan-directive-without-template>
+    </div>
+  </div>
+</div>
