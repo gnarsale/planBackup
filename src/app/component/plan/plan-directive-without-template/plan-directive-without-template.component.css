@@ -1,0 +1,200 @@
+.card-body-scroll-target {
+    background-color: aliceblue;
+    min-height: 370px;
+    max-height: 370px;
+  }
+  
+  .card-body-scroll-added-target {
+    background-color: aliceblue;
+    overflow: auto;
+    min-height: 370px;
+    max-height: 370px;
+  }
+  
+  .add-button {
+    font-size: 25px;
+    margin-top: 198px;
+  }
+
+  .selected-strucutre {
+    background-color: #394a59;
+    color: white;
+    border-radius: 3px;
+  }
+
+  .text-ellipses {
+    text-overflow: ellipsis;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    width: 351px;
+    position: relative;
+    top: 3px;
+  }
+
+  .targets-scroll-y {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 250px;
+  }
+
+  .border-down {
+    border-bottom: 1px solid #DCDADF;
+    cursor: pointer;
+  }
+
+  .input-fraction-css {
+    padding: 0px 0px 0px 2px;
+       width: 40%;
+  }
+  
+  .input-dose-css {
+    padding: 0px 0px 0px 2px;
+    }
+
+  .div-border-css {
+    background-color: aliceblue;
+    padding: 5px 48.7%;
+    width: 90%;
+    margin-bottom: 10px;
+  }
+  
+  .border-css {
+    background-color: aliceblue;
+    margin-top: 10px;
+    padding: 6px 0px;
+    width: 99.1%;
+    margin-left: 0.1%;
+    padding-bottom: 1px;  
+  }
+
+  .delete-structure {
+    font-size: 10px;
+    position: relative;
+    top: 8px;
+  }
+  
+  .phase-options {
+    width: 60%;
+        }
+
+  .icon-font-size {
+    font-size: 17px;
+    margin-left: 5px;
+  }
+
+  .div-card {
+    margin-left: -10px;
+    margin-right: -10px;
+    background-color: aliceblue;
+    border: 1px solid #DCDADF;
+    border-radius: 3px;
+    margin-bottom: 3px;
+  }
+
+  .wizard a {
+    padding: 9px 12px 9px;
+    background: #efefef;
+    position: relative;
+    display: inline-block;
+    width: 50%;
+    text-decoration: transparent;
+    text-align: center;
+  }
+  
+  .wizard a:before {
+    width: 0;
+    height: 0;
+    border-top: 20px inset transparent;
+    border-bottom: 20px inset transparent;
+    border-left: 20px solid #fff;
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+  }
+  
+  .wizard a:after {
+    width: 0;
+    height: 0;
+    border-top: 20px inset transparent;
+    border-bottom: 20px inset transparent;
+    border-left: 20px solid #efefef;
+    position: absolute;
+    content: "";
+    top: 0;
+    right: -20px;
+    z-index: 2;
+  }
+  
+  .wizard a:first-child:before,
+  .wizard a:last-child:after {
+    border: none;
+  }
+  
+  .wizard .badge {
+    margin: 0 5px 0 18px;
+    position: relative;
+    top: -1px;
+    line-height: 17px;
+    font-size: 11px;
+    border-radius: 22px;
+    width: 24px;
+    border: 1px solid #394a59;
+    background-color: #394a59;
+    color: white;
+  }
+  
+  .wizard a:first-child .badge {
+    margin-left: 0;
+  }
+  
+  .wizard .current {
+    background: #394a59;
+    color: #fff !important;
+  }
+  
+  .wizard .current:after {
+    border-left-color: #394a59;
+  }
+  
+  .wizard .current .badge {
+    color: #394a59;
+    background: #ffffff;
+  }
+  
+  .wizard-body {
+    padding-top: 13px;
+  }
+  
+  .modal-header {
+    background-color: #e9ecef;
+  }
+  
+  .modal-content {
+    position: relative;
+    right: 115px;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: 132% !important;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, .2);
+    border-radius: .3rem;
+    outline: 0;
+  }
+  
+  .card-header {
+    font-size: 16px;
+    padding: 5px 15px;
+    background-color: #e9ecef;
+  }
+
+  .error {
+    border: 1px solid red;
+  }
+  

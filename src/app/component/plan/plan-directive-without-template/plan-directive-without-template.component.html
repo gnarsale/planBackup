@@ -1,0 +1,185 @@
+<div class="modal-header">
+  <h5 class="modal-title" id="modalLabel" style="display: inline;">Plan Directive without template for
+    {{siteName}}</h5>
+  <button type="button" #closeCustomTemplateCreate class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body" style="min-height: 450px;">
+  <div class="wizard">
+    <a [ngClass]="{'current':page==0}">
+      <span class="badge">1</span> Define Targets</a>
+    <a [ngClass]="{'current':page==1}">
+      <span class="badge">2</span> Define Phases</a>
+  </div>
+  <div class="wizard-body container">
+    <div [hidden]="page!=0">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-header"><b>Classification</b></div>
+            <div class="card-body card-body-scroll-target" style="background-color: aliceblue;">
+              <label class="control-label">Select a classification for the target to be added</label>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+                </div>
+                <input type="text" class="form-control" (change)="undoSelectedStrucutre()" [(ngModel)]="targetFilterValue"
+                  placeholder="Search Target" aria-describedby="basic-addon1">
+              </div>
+              <div class="row">
+                <span class="col-lg-8">Meaning</span>
+                <span class="col-lg-4" style="padding-left: 4px;">Code</span>
+              </div>
+              <div class="targets-scroll-y">
+                <div (click)="selectStrucutre(structure)" *ngFor="let structure of StructureCollection | targetFilter : targetFilterValue"
+                  class="border-down">
+                  <div [ngClass]="{'selected-strucutre':isStrucutreSelected == true && structure === selectedStructure}"
+                    class="row" style="display: block;">
+                    <span class="col-lg-8 text-ellipses">{{structure.Meaning}}</span>
+                    <span class="col-lg-4 text-ellipses">{{structure.Code}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <span *ngIf="isStrucutreSelected === true,else notStrucutreSelected" (click)="addSelectedTarget()" class="add add-button"></span>
+        <ng-template #notStrucutreSelected>
+          <span class="add add-button"></span>
+        </ng-template>
+
+        <div class="col-sm-5">
+          <div class="card" style="margin-right: -69px;">
+            <div class="card-header"><b>Targets to Add</b></div>
+            <div class="card-body card-body-scroll-added-target">
+
+              <div *ngFor="let structure of selectedStructureCollection let i=index;" class="card-header div-card">
+                <div class="row">
+                  <div class="col-sm-11">
+                    <div class="row">
+                      <div class="col-sm-3" style="padding-right: 3px;">
+                        <label class="pull-right">Classification</label>
+                        <label class="pull-right">Name</label>
+                      </div>
+                      <div class="col-sm-9" style="padding-left: 0px;">
+                        <span> {{structure.Meaning}} ({{structure.Code}}) </span><br />
+                        <input type="text" [ngClass]="{'error':structure.Name === ''}" class="form-control" style="width:98%;"
+                          (change)="updateStrucutreName(structure,$event.target.value,i)" value="{{structure.Name}}" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-1" style="padding: 3.4% 0%;">
+                    <span (click)="deleteStructureTarget(structure)" class="trash icon-font-size delete-structure"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div [hidden]="page!=1">
+      <span>Anatomical Site : {{siteName}}</span>
+      <div class="div-border-css">
+        <span>Timing</span>
+      </div>
+      <div class="row">
+        <div class="col-lg-2">
+          <span> # of Phases</span>
+        </div>
+        <div class="col-lg-2">
+          <select title="Select Number of Phases" (change)="getSelectedPhaseNumber($event.target.value)" class="form-control phase-options">
+            <option disabled hidden></option>
+            <option *ngFor='let phase of phases' value="{{phase}}">{{phase}}</option>
+          </select>
+        </div>
+      </div>
+      <div style="overflow-y: scroll;max-height: 301px;">
+        <form [formGroup]="definePhaseForm" class="form-horizontal">
+          <div *ngFor='let phaseTarget of phaseTargets' class="row border-css">
+            <div class="col-lg-3">
+              <div class="row" [ngClass]="{'has-error': definePhaseForm.get('noOfFractions').errors 
+                            && (definePhaseForm.get('noOfFractions').touched || definePhaseForm.get('noOfFractions').dirty)}">
+                <div class="col-lg-8">
+                  <label class="control-label" for="noOfFractions"> Phase
+                    {{phaseTarget.phaseId}} No. of
+                    Fractions</label>
+                </div>
+                <div class="col-lg-4">
+                  <input id="noOfFractions" formControlName="noOfFractions" (change)="updateNumberOfFraction(phaseTarget,$event.target.value)"
+                    type="text" class="form-control input-dose-css">
+                  <span class="help-block" *ngIf="definePhaseForm.get('noOfFractions').errors 
+                          && (definePhaseForm.get('noOfFractions').touched || definePhaseForm.get('noOfFractions').dirty)">
+                    <span *ngIf="definePhaseForm.get('noOfFractions').errors.required,else nextFractionError">
+                      Fraction is required.
+                    </span>
+                    <ng-template #nextFractionError>
+                      <span *ngIf="definePhaseForm.get('noOfFractions').errors?.min || definePhaseForm.get('noOfFractions').errors?.max ">
+                        Fraction value should be between 1 to 50.
+                      </span>
+                    </ng-template>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-9" *ngFor="let target of phaseTarget.targets">
+              <div class="row">
+                <div class="col-lg-4">
+                  <div class="row">
+                    <div class="col-lg-2">
+                      <input type="checkbox" (change)="enableDoseFraction(target)">
+                    </div>
+                    <div class="col-lg-9">
+                      <span>{{target.targetName}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div [hidden]="target.isHidden" class="col-lg-8">
+                  <div class="row">
+                    <div class="col-lg-7 form-group" style="margin-bottom: 5px;" [ngClass]="{'has-error': definePhaseForm.get('totalDose').errors 
+                          && (definePhaseForm.get('totalDose').touched || definePhaseForm.get('totalDose').dirty)}">
+                      <div class="row">
+                        <div class="col-lg-6">
+                          <label class="control-label" for="noOfFractions"> Total Dose </label>
+                        </div>
+                        <div class="col-lg-4">
+                          <input id="totalDose" formControlName="totalDose" type="number" [value]=target.totalDose
+                            (change)="updateTotalDose(target,phaseTarget,$event.target.value)" class="form-control input-dose-css">
+                          <span class="help-block" *ngIf="definePhaseForm.get('totalDose').errors 
+                          && (definePhaseForm.get('totalDose').touched || definePhaseForm.get('totalDose').dirty)">
+                            <span *ngIf="definePhaseForm.get('totalDose').errors.required, else nextDoseError">
+                              Total Dose is required.
+                            </span>
+                            <ng-template #nextDoseError>
+                              <span *ngIf="definePhaseForm.get('totalDose').errors?.min || definePhaseForm.get('totalDose').errors?.max">
+                                Total Dose value should be between 0.01 to 125.
+                              </span>
+                            </ng-template>
+                          </span>
+                        </div>
+                        <div class="col-lg-2" style='padding-left: 0px;'>
+                          <span> Gy </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="target.doseFraction !== 0" class="col-lg-5">
+                      <span>Dose/Fraction {{target.doseFraction | number:'1.2-3'}}
+                        Gy</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button (click)="gotoPrev()" *ngIf="page!==0 " class="btn btn-black pull-left">Previous</button>
+  <button [disabled]="selectedStructureCollection.length === 0" (click)="gotoNext()" *ngIf="page!==1" class="btn btn-black pull-right">Next</button>
+  <button class="btn btn-black pull-right" (click)="createTemplate();" *ngIf="page!==0">Create</button>
+</div>
