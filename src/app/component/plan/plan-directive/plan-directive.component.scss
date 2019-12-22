@@ -1,0 +1,164 @@
+@import '../../../../sass/styles.scss';
+
+.region {
+  padding: 6px;
+  font-size: 14px;
+  font-weight: normal;
+  border-radius: 0;
+  background-color: #d3d3d3;
+  color: black;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.padding-5 {
+  padding: 5px;
+  /* border: 1px solid #6c757d; */
+  border-radius: 3px;
+  margin-bottom: 10px;
+}
+
+.navbar {
+  height: 46px;
+}
+
+.patient-name-characters {
+  display: inline-block;
+  width: 2.5em;
+  height: 2.5em;
+  line-height: 2.5em;
+  text-align: center;
+  border-radius: 50%;
+  background: white;
+  vertical-align: middle;
+  margin-right: 1em;
+  color: #394a59;
+}
+
+@include themify($themes) {
+  .navbar {
+    color: themed('sub-header-color') !important;
+  }
+
+  .selected {
+    background: themed('site-name');
+    padding: 5px;
+    color: white;
+  }
+}
+
+.button-position {
+  margin-right: 2% !important;
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+}
+
+.search-icon {
+  cursor: pointer;
+  background: #d3d3d3;
+  float: right;
+  margin-top: 3px;
+  margin-right: 13px;
+}
+
+.search-icon-clicked {
+  background-color: #d3d3d3;
+  position: relative;
+  cursor: pointer;
+  float: right;
+  margin-top: 3px;
+  margin-right: 13px;
+}
+
+.fa-star {
+  color: green;
+  position: absolute;
+  right: 13px;
+  margin-top: 4px;
+  cursor: pointer;
+}
+
+.name-char {
+  padding: 0px;
+  background-color: #394a59;
+}
+
+.name {
+  border-right: 1px solid;
+  color: white;
+}
+
+.padding-right-10px {
+  padding-right: 10px;
+}
+
+.header-name {
+  margin-left: 10px;
+  color: white;
+}
+
+.position-input {
+  position: relative;
+  bottom: 1px;
+  border: 0px solid gray;
+  width: 242PX;
+}
+
+.font14 {
+  font-size: 14px;
+}
+
+.input-fraction-css {
+  padding: 0px 0px 0px 2px;
+  // height: 106%;
+  width: 40%;
+}
+
+.nav-bar-padding {
+  padding: 4px 0px 4px 0px;
+}
+
+.font-size-10 {
+  font-size: 10px;
+}
+
+.font-weight-400 {
+  font-weight: 400;
+}
+
+.region-selector {
+  padding-left: 70px !important;
+}
+
+.height-32px {
+  height: 32px;
+}
+
+.site-paragraph-padding {
+  padding: 1% 2%
+}
+
+.name-list {
+  padding: 0px;
+  border-radius: .25rem;
+  cursor: pointer;
+}
+
+.directive-paragraph-padding {
+  white-space: nowrap;
+  padding-bottom: 2px;
+}
+
+.padding-right-20px {
+  padding-right: 25px;
+}
+
+.fav-checkbox {
+  background: #d3d3d3;
+  float: right;
+  margin-top: 3px;
+  margin-right: 6px;
+}

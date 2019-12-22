@@ -1,0 +1,146 @@
+<!-- Displaying the Patient Details below the header-->
+<nav class="navbar navbar-expand-sm row name-char nav-bar-padding">
+  <div style="margin-left: 28px;">
+    <div class="patient-name-characters">
+      {{patientFirstNameCharacter}}{{patientLastNameCharacter}}
+    </div>
+  </div>
+  <div class="name padding-right-10px">
+    <span> {{patient?.Name | titleCase}}</span>
+    <br />
+    <span class="font-size-10">{{structureSetId}} <span class="font-weight-400">|</span> {{patient?.ID}} </span>
+  </div>
+  <!-- Text displayed for Selection of Template -->
+  <div class="header-name">
+    <span class="padding-right-10px">Select Plan Directive Template</span>
+  </div>
+</nav>
+
+<br />
+<div class="row">
+  <!-- Anatomical Region Selection -->
+  <div class="col-md-3 region-selector">
+    <div class="row">
+      <app-anatomical-region class="col-md-12" (onRegionSelected)="selectedRegion($event)"></app-anatomical-region>
+    </div>
+    <div class="row" style="margin-top: 30px;">
+      <div class="col-md-12">
+
+        <p class="region width-100 height-32px"><span class="font14">Favorites Templates</span> <span class=" fav-checkbox"
+            style="margin-top: 1px;">Show All</span>
+          <span class="fav-checkbox"><input type="checkbox" (change)="showAndHideFavouriteFilter()" [checked]="filter === true ? true : false"></span>
+        </p>
+        <div style="padding-top: 2px;">
+          <div class=row *ngFor="let template of this.appService.objPlanDirectiveDetails.favoriteTemplates">
+            <div class="col-sm-10">
+
+              <p class="width-100 padding-5" (click)="selectedFavoritePlanTemplate(template)" [ngClass]="{'selected':isFavoriteTemplateClicked && favoriteTemplateId == template.PlanDirectiveTemplateID}">
+                <span class="name-list">{{template.PlanDirectiveTemplateName}}
+                </span>
+              </p>
+            </div>
+            <div class="col-sm-1">
+              <span style="float:right; top: 9px;" (click)="templateSelected(template, true)" class="remove icon-font-size">
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <!-- Anatomical Sites Selection -->
+  <div class="col-md-3" *ngIf="regionselected == true">
+    <p class="region width-100 height-32px">
+      <input class="position-input" *ngIf="searchSiteName,else notSearchSiteName" type="search" placeholder="Anatomical Site"
+        [(ngModel)]="anatomicalSiteFilter" (input)="onSearch($event.target.value)" />
+      <ng-template #notSearchSiteName>
+        <span class="font14">Anatomical Site</span>
+      </ng-template>
+      <i [ngClass]="{'search-icon':!searchSiteName,'search-icon-clicked' : searchSiteName}" class="fa fa-search"
+        (click)="searchSite()"></i>
+    </p>
+    <div>
+      <p class="width-100 padding-5 site-paragraph-padding" *ngFor="let site of sites | anatomicalFilter: anatomicalSiteFilter"
+        (click)="getTemplates(site.PlanDirectiveSiteID)" [ngClass]="{'selected':isSiteClicked && siteId == site.PlanDirectiveSiteID}">
+        <span class="name-list">{{site.PlanDirectiveSiteName}}</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Plan Template Selection -->
+  <div class="col-md-3" *ngIf="isSiteClicked == true">
+    <p class="region width-100 height-32px">
+      <input *ngIf="searchTemplateName,else notSeacrchTemplateName" class="position-input" type="text" placeholder="Planning Directive Templates"
+        [(ngModel)]="pdtFilter" />
+      <ng-template #notSeacrchTemplateName>
+        <span class="font14">Planning Directive Templates</span>
+      </ng-template>
+
+      <i [ngClass]="{'search-icon':!searchTemplateName,'search-icon-clicked' : searchTemplateName}" class="fa fa-search"
+        (click)="searchTemplate()"></i>
+    </p>
+    <div>
+      <div class="row" *ngFor="let plantemplate of plantemplates | planningDirectiveFilter: pdtFilter; let i = index;">
+        <div class="col-sm-10">
+          <p class="width-100 padding-5 directive-paragraph-padding" (click)="selectedPlanTemplate(plantemplate.PlanDirectiveTemplateID)"
+            [ngClass]="{'selected':isPlanTemplateClicked && planId == plantemplate.PlanDirectiveTemplateID}">
+            <span class="name-list">{{plantemplate.PlanDirectiveTemplateName}}
+            </span>
+          </p>
+        </div>
+        <div class="col-sm-1 padding-right-20px">
+          <span *ngIf="(plantemplate.PlanDirectiveTemplateName !== 'Planning Directive without a template')" (click)="templateSelected(plantemplate,plantemplate.IsFavourite)"
+            [ngClass]="{'favorite-add':!plantemplate.IsFavourite,'fa':plantemplate.IsFavourite,'fa-star':plantemplate.IsFavourite}"
+            class="favorite-addicon-font-size"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="col-md-3" style="padding-right: 64px;">
+    <p class="region width-100 height-32px">
+      <span class="font14">Favorites Templates</span>
+    </p>
+    <div style="padding-top: 2px;">
+      <div class=row *ngFor="let template of this.appService.objPlanDirectiveDetails.favoriteTemplates">
+        <div class="col-sm-10">
+
+          <p class="width-100 padding-5" style="padding: 1% 2%" (click)="selectedFavoritePlanTemplate(template)"
+            [ngClass]="{'selected':isFavoriteTemplateClicked && favoriteTemplateId == template.PlanDirectiveTemplateID}">
+            <span class="name-list">{{template.PlanDirectiveTemplateName}}
+            </span>
+          </p>
+        </div>
+        <div class="col-sm-1">
+
+
+          <span style="float:right; top: 9px;" (click)="templateSelected(template, true)" class="remove icon-font-size">
+          </span>
+        </div>
+
+      </div>
+    </div>
+  </div> -->
+</div>
+<br>
+
+<!-- Create and Cancel Buttons -->
+<div class="row button-position">
+  <span>
+    <button type="button" [disabled]="isCreateTemplateDisabled" [ngStyle]="{'color':isCreateTemplateDisabled  ? 'currentColor': ''}"
+      class="btn btn-black btn-default" (click)="createDirective()">Create</button>
+    &nbsp;
+    <button type="button" class="btn btn-black btn-default" [routerLink]="['/Orders']">Cancel</button>
+  </span>
+</div>
+
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <app-plan-directive-without-template [selectedSiteId]="selectedSiteId" [orderId]="orderId" [selectedregionId]="selectedregionId"></app-plan-directive-without-template>
+    </div>
+  </div>
+</div>
