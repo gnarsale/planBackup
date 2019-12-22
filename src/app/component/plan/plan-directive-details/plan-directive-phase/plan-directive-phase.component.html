@@ -1,0 +1,104 @@
+<ng-container *ngIf="styleConfigured==='oncology360',else varian">
+
+  <div class=" white-space-group" style="margin-left:15px;">
+    <div class="phase-row phase row text-center flex-nowrap">
+
+      <!-- Total Phase sub component -->
+      <div class="col-sm-4 phase-boxes">
+        <app-total-phase [EditMode]="'no'"></app-total-phase>
+      </div>
+
+      <!-- Displaying all the Pahses along with targets and respective dose -->
+      <div class="col-sm-4 phase-boxes" *ngFor="let phase of phases; let i = index;">
+        <div class="info-box background-white ">
+          <div class="clearfix info-box-header ">
+            <span class="pull-left"><b style="font-size: 16px;" class="color-#394a59">Phase {{i+1}}</b></span>
+            <span class="pull-right"><b style="font-size: 16px;" class="color-#394a59">{{phase.targetCount}}
+                <span class="color-#8195a7">Target</span></b></span>
+            <span class="pull-right padding-15px"><b style="font-size: 16px; " class="color-#394a59">{{phase.FractionCount}}</b>
+              <span class="color-#8195a7">Fx</span></span>
+          </div>
+          <div class=" clearfix info-box-value margin-left-right row">
+            <table class="col-sm-12">
+              <tr *ngFor="let PrescriptionTarget of phase.PrescriptionTargets">
+                <td class="padding-right-15px col-sm-6">
+                  <span title="{{PrescriptionTargetData.StructureCode}}" _ngcontent-c7="" class="pull-left"><b class="color-#394a59">{{
+                      (PrescriptionTargetData.StructureCode.length>9)? (PrescriptionTargetData.StructureCode |
+                      slice:0:9)+'..':(PrescriptionTargetData.StructureCode) }}</b></span>
+                </td>
+                <td class="col-sm-3">
+                  <span _ngcontent-c7="" class="pull-left"><b class="color-#394a59">{{PrescriptionTarget.Dose}} </b></span>
+                  <span class="color-#8195a7">Gy</span>
+                </td>
+                <td class="col-sm-3">
+                  <span _ngcontent-c7="" class="pull-left"><b class="color-#394a59">{{PrescriptionTarget.FractionDoseGy
+                      | number:'1.2-3'}}
+                      <span class="color-#8195a7">Gy/Fx</span></b></span>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-template #varian>
+  <div class=" white-space-group" style="margin-left:15px;">
+    <div class="phase-row phase row text-center flex-nowrap">
+
+      <!-- Total Phase sub component -->
+      <div class="col-sm-4 phase-boxes">
+        <app-total-phase [EditMode]="'no'"></app-total-phase>
+      </div>
+
+      <!-- Displaying all the Pahses along with targets and respective dose -->
+      <div class="col-sm-4 phase-boxes" *ngFor="let phase of phases; let i = index;">
+        <div class="info-box background-white ">
+          <div class="clearfix info-box-header ">
+            <span class="pull-left"><b>Phase {{i+1}}</b></span>
+            <span class="pull-right "><b>{{phase.targetCount}} Target</b></span>
+            <span class="pull-right padding-15px"><b>{{phase.FractionCount}}</b> Fx</span>
+          </div>
+          <div class=" clearfix info-box-value margin-left-right row">
+            <table class="col-sm-12">
+              <div *ngFor="let target of totalphase.targets; let i = index;">
+                <div *ngIf="getPrescribedTargets(target,phase); else elsePaart">
+                  <tr *ngIf="PrescriptionTargetData">
+                    <td class="col-sm-4">
+                      <span _ngcontent-c7="" title="{{PrescriptionTargetData.StructureCode}}" class="pull-left"><b>{{
+                          (PrescriptionTargetData.StructureCode.length>9)? (PrescriptionTargetData.StructureCode |
+                          slice:0:9)+'..':(PrescriptionTargetData.StructureCode) }}</b></span>
+                    </td>
+                    <td class="col-sm-4">
+                      <span _ngcontent-c7="" class="pull-left"><b>{{PrescriptionTargetData.Dose}} </b></span>
+                      Gy
+                    </td>
+                    <td class="col-sm-4">
+                      <span _ngcontent-c7="" class="pull-left"><b>{{PrescriptionTargetData.FractionDoseGy |
+                          number:'1.2-3'}}
+                          Gy/Fx</b></span>
+                    </td>
+                  </tr>
+                </div>
+                <ng-template #elsePaart>
+                  <tr class="row margin-0">
+                    <td class="col-sm-5">
+
+                    </td>
+                    <td style="margin-bottom:16px;" class="col-sm-5 form-group">
+
+                    </td>
+                    <td class="col-sm-2 color-unit">
+
+                    </td>
+                  </tr>
+                </ng-template>
+              </div>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
