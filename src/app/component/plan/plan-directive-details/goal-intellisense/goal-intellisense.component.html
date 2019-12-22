@@ -1,0 +1,93 @@
+<ng-container *ngIf="styleConfigured==='oncology360',else varian">
+
+  <div clickOutside (clickOutside)="closeIntellisense()" id="goalIntellisense" name="goalIntellisense">
+    <div [ngClass]="{'has-error': containsError}">
+      <input readonly (click)="openDropDown($event)" class="form-control txt-error-border input-underline search-bar select"
+        [(ngModel)]="goal" id="Goal" />
+    </div>
+    <!-- Intelligence for goal selection is implemented -->
+
+    <div [ngStyle]="{'display':showDoseName?'block':'none'}" class='search-drop-down'>
+      <div (click)='selectValue(s.key, "first")' class='search-results' *ngFor="let s of intellisenseService.intellisenseObj.states">
+        <a [innerHTML]="s.key">
+          {{s.key}}
+        </a>
+      </div>
+    </div>
+
+    <div [ngStyle]="{'display':showLeftExpValue?'block':'none'}" class='search-drop-down'>
+      <input placeholder="Enter [0-9]" type="text" (keypress)="numberOnly($event)" maxlength="3" class="form-control input-underline search-bar"
+        (keyup)="onNumberEnter('lft', $event.target.value)">
+      <div (click)='selectValue(s.key, "second")' class='search-results' *ngFor="let s of intellisenseService.intellisenseObj.leftExpModel">
+        <a [innerHTML]="s.key">
+          {{s.key}}
+        </a>
+      </div>
+    </div>
+
+    <div [ngStyle]="{'display':showOperator?'block':'none'}" class='search-drop-down'>
+      <div (click)='selectValue(s.key, "third")' class='search-results' *ngFor="let s of intellisenseService.intellisenseObj.operator">
+        <a [innerHTML]="s.key">
+          {{s.key}}
+        </a>
+      </div>
+    </div>
+
+    <div [ngStyle]="{'display':showRightExpValue?'block':'none'}" class='search-drop-down'>
+      <input placeholder="Enter [0-9]" type="text" (keypress)="numberOnly($event)" maxlength="3" class="form-control input-underline search-bar"
+        (keyup)="onNumberEnter('rgt', $event.target.value)">
+      <div (click)='selectValue(s.key, "fourth")' class='search-results' *ngFor="let s of intellisenseService.intellisenseObj.rightExpModel">
+        <a [innerHTML]="s.key">
+          {{s.key}}
+        </a>
+      </div>
+    </div>
+  </div>
+  <!-- Intelligence implementation over -->
+</ng-container>
+<ng-template #varian>
+  <div #target appClickOutside (clickOutside)="closeIntellisense()" id="goalIntellisense" name="goalIntellisense">
+    <div [ngClass]="{'has-error': containsError}">
+      <input readonly (click)="openDropDown($event)" class="form-control txt-error-border input-underline search-bar"
+        [(ngModel)]="goal" id="Goal" />
+    </div>
+    <!-- Intelligence for goal selection is implemented -->
+
+    <div [ngStyle]="{'display':showDoseName?'block':'none', 'margin-bottom' : '5px'}" class='search-drop-down'>
+      <div (click)='selectValue(s.key, "first")' class='search-results' *ngFor="let s of intellisenseService.intellisenseObj.states">
+        <a [innerHTML]="s.key">
+          {{s.key}}
+        </a>
+      </div>
+    </div>
+
+    <div [ngStyle]="{'display':showLeftExpValue?'block':'none', 'margin-bottom' : '5px'}" class='search-drop-down'>
+      <input placeholder="Enter [0-9]" type="text" [value]="objGoal.lftValue" (keypress)="numberOnly($event)" maxlength="3" class="form-control input-underline search-bar"
+        (keyup)="onNumberEnter('lft', $event.target.value)">
+      <div (click)='selectValue(s.key, "second")' class='search-results' *ngFor="let s of intellisenseService.intellisenseObj.leftExpModel">
+        <a [innerHTML]="s.key">
+          {{s.key}}
+        </a>
+      </div>
+    </div>
+
+    <div [ngStyle]="{'display':showOperator?'block':'none', 'margin-bottom' : '5px'}" class='search-drop-down'>
+      <div (click)='selectValue(s.key, "third")' class='search-results' *ngFor="let s of intellisenseService.intellisenseObj.operator">
+        <a [innerHTML]="s.key">
+          {{s.key}}
+        </a>
+      </div>
+    </div>
+
+    <div [ngStyle]="{'display':showRightExpValue?'block':'none', 'margin-bottom' : '5px'}" class='search-drop-down'>
+      <input placeholder="Enter [0-9]" type="text" [value]="objGoal.rgtValue" (keypress)="numberOnly($event)" maxlength="3" class="form-control input-underline search-bar"
+        (keyup)="onNumberEnter('rgt', $event.target.value)">
+      <div (click)='selectValue(s.key, "fourth")' class='search-results' *ngFor="let s of intellisenseService.intellisenseObj.rightExpModel">
+        <a [innerHTML]="s.key">
+          {{s.key}}
+        </a>
+      </div>
+    </div>
+  </div>
+  <!-- Intelligence implementation over -->
+</ng-template>
