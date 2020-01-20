@@ -1,0 +1,624 @@
+<ng-container *ngIf="styleConfigured==='oncology360',else varian">
+  <app-subheader [bannerLabel]="bannerLabel"></app-subheader>
+  <br />
+  <form #f="ngForm" class="form-inline">
+    <div class="col-sm-10 offset-sm-1">
+      <div class="row">
+        <div class="col-sm-2 text-input">
+          <input type="search" name="patientID" [(ngModel)]="planFilter.PatientDetails.searchInput" placeholder=" "
+            class="form-control status text-box">
+          <span>Patient Name / Id</span>
+        </div>
+        <div class="padding-1perc">
+          <span class="centre-align" style="position: relative; top: -1px;"> Advanced Search &nbsp;&nbsp;&nbsp;&nbsp;
+          </span>
+          <input type="checkbox" (change)="enableAdvancedSearch = !enableAdvancedSearch">
+        </div>
+        <div class="col-sm-2 text-input">
+          <input type="text" [disabled]="!enableAdvancedSearch" name="machineId" [(ngModel)]="planFilter.MachineID"
+            placeholder=" " class="form-control status text-box">
+          <span>Machine Id</span>
+        </div>
+        <div class="col-sm-2 text-input">
+          <input type="text" [disabled]="!enableAdvancedSearch" name="sturctureSetID" [(ngModel)]="planFilter.StructureSetID"
+            placeholder=" " class=" form-control status text-box">
+          <span>Structure Set Id</span>
+        </div>
+        <div class="col-sm-2">
+          <div class="form-group">
+            <select [disabled]="!enableAdvancedSearch" [(ngModel)]="planStage" (change)="updatePlanFilterModel('planStage')"
+              name="planStage" class="form-control priority drop-down">
+              <option value=''>--Select Priority--</option>
+              <option *ngFor="let prior of priorityOptions;let i = index" [value]="prior.id">
+                <div> {{prior.priority}}</div>
+              </option>
+            </select></div>
+        </div>
+        <div class="col-sm-2">
+          <div class="form-group">
+            <select [disabled]="!enableAdvancedSearch" [(ngModel)]="statusCode" (change)="updatePlanFilterModel('status')"
+              class="form-control status drop-down" name="status" id="status">
+              <option value=''>--Select Directive Stage--</option>
+              <option *ngFor="let status of statusKeys();let i = index" [value]="status">
+                <div> {{status}}</div>
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <br>
+
+  <div style="text-align: center;">
+    <p-table class="table table-striped borderless" selectionMode="single" (selectionChange)="orderSelected($event)"
+      [(selection)]="selectedRows" sortField="PlanPriority" sortOrder="1" [value]="planOrders | filterPlanOrder: planFilter"
+      [autoLayout]=true [resetPageOnSort]="false" [paginator]="true" [rows]="5" [responsive]="true" [resizableColumns]="true">
+      <ng-template class="table" pTemplate="header">
+        <tr>
+          <th class="sortable-color width-10" [pSortableColumn]="'PatientDetails.Name'"> Patient Name
+            <p-sortIcon [field]="'PatientDetails.Name'"></p-sortIcon>
+          </th>
+          <th class="sortable-color width-10" [pSortableColumn]="'PatientDetails.ID'">Patient Id
+            <p-sortIcon class="sortable-color" [field]="'PatientDetails.ID'"></p-sortIcon>
+          </th>
+          <th class="sortable-color" [pSortableColumn]="'PatientDetails.AnonymizedID'">De-identified Id
+            <p-sortIcon class="sortable-color" [field]="'PatientDetails.AnonymizedID'"></p-sortIcon>
+          </th>
+          <th style="width: 20%;">Planning Directive</th>
+          <th style="width: 3%;">Notes</th>
+          <th [pSortableColumn]="'PlanPriority'" class="width-11pt3 sortable-color">Priority
+            <p-sortIcon id="prioritySortIcon" [field]="'PlanPriority'"></p-sortIcon>
+          </th>
+          <th style="width: 9.6%;">Machine Id</th>
+          <th [pSortableColumn]="'Status'" class="width-9pt3 sortable-color">Status
+            <p-sortIcon [field]="'Status'"></p-sortIcon>
+          </th>
+          <th>Order Id</th>
+          <th>Structure Set Id</th>
+          <th>Updated by</th>
+        </tr>
+      </ng-template>
+      <ng-template class="table" pTemplate="body" let-rowData let-columns="columns">
+        <tr [pSelectableRow]="rowData" [ngClass]="{'active':rowData.active}">
+          <td>
+            {{rowData.PatientDetails.Name | titlecase }}
+          </td>
+          <td>
+            {{rowData.PatientDetails.ID}}
+          </td>
+          <td>
+            {{rowData.PatientDetails.AnonymizedID}}
+          </td>
+          <td class="row">
+            <div class="templateName col-sm-6" style="line-height: 50px;">
+              <span title='{{rowData.PlanDirective }}' *ngIf="statusOptions[rowData.Status-1] !== 'New' && ( statusOptions[rowData.Status-1] !== 'Image Transfer Failed' && statusOptions[rowData.Status-1] !== 'Image Transfer In-Progress') || rowData.DirectiveId !== null,else notcreated">
+                {{rowData.PlanDirective }} </span>
+              <ng-template #notcreated>
+                <a [routerLink]="['/planning-directive-create',rowData.StructureSetID,rowData.PatientDetails.ID]">
+                  {{rowData.PlanDirective }} </a>
+              </ng-template>
+            </div>
+            <div class="templateActions col-sm-6">
+              <ul *ngIf="(statusOptions[rowData.Status-1] =='In Progress' || statusOptions[rowData.Status-1] !== 'Image Transfer Failed' || statusOptions[rowData.Status-1] !== 'Image Transfer In-Progress') && rowData.DirectiveId !== null"
+                id="horizontal-list">
+                <li (click)="updateDirective(rowData)" style="padding-right: 5px;" title='Update Template'>
+                  <button><span class="edit margin-top-6px"></span></button>
+                </li>
+                <li (click)="replaceTemplate(rowData)" style="padding-right: 5px;" title='Change Template'>
+                  <button><span class="refresh margin-top-6px"></span></button>
+                </li>
+
+                <li (click)="removeTemplate(rowData)" title='Remove Template'>
+                  <button><span class="trash margin-top-6px"></span></button>
+                </li>
+              </ul>
+            </div>
+          </td>
+          <td *ngIf="(statusOptions[rowData.Status-1] == 'New' || statusOptions[rowData.Status-1] == 'In Progress' || statusOptions[rowData.Status-1] !== 'Image Transfer Failed' || statusOptions[rowData.Status-1] !== 'Image Transfer In-Progress') && !rowData.PlanNotes ;  else elsepart">
+            <div>
+              <ul id='notes'>
+                <li class="padding-5px">
+                  <button (click)="selectNotes(rowData)" data-toggle="modal" data-target="#myNotes"><span class="add margin-top-6px"></span></button>
+                </li>
+              </ul>
+            </div>
+          </td>
+          <td #elsepart *ngIf="(statusOptions[rowData.Status-1] == 'New' || statusOptions[rowData.Status-1] == 'In Progress' || statusOptions[rowData.Status-1] !== 'Image Transfer Failed' || statusOptions[rowData.Status-1] !== 'Image Transfer In-Progress') && rowData.PlanNotes">
+            <div>
+              <ul id='notes'>
+                <li class="padding-5px">
+                  <button (click)="selectNotes(rowData)" data-toggle="modal" data-target="#myNotes"><span class="edit margin-top-6px"></span></button>
+                </li>
+              </ul>
+            </div>
+          </td>
+          <td *ngIf="statusOptions[rowData.Status-1] == 'Sent'  && rowData.PlanNotes === null ; else elsepart2">
+            <div>
+              <ul id='notes'>
+                <li class="padding-5px">
+                  <button [disabled]='true'><span class="add margin-top-6px"></span></button>
+                </li>
+              </ul>
+            </div>
+          </td>
+          <td #elsepart2 *ngIf="statusOptions[rowData.Status-1] == 'Sent'  && rowData.PlanNotes !== null ">
+            <div>
+              <ul id='notes'>
+                <li class="padding-5px">
+                  <button disabled='true' data-toggle="modal" data-target="#myNotes"><span class="edit margin-top-6px"></span></button>
+                </li>
+              </ul>
+            </div>
+          </td>
+          <td class="drop-down-class">
+            <select [disabled]="statusOptions[rowData.Status-1] == 'Sent'" style="height: 30px;" class="form-control"
+              (change)="onPriorityChange($event.target.value, rowData)">
+              <option value=0>--Select--</option>
+              <option *ngFor="let prior of priorityOptions;let i = index" [value]="prior" [selected]="rowData.PlanPriority != 0 ? prior.id == priorityOptions[rowData.PlanPriority-1].id : false">
+                <div> {{prior}} ({{i +1}} day)</div>
+              </option>
+            </select>
+          </td>
+          <td style="padding-top: 4px;padding-bottom: 4px;">
+            <select [disabled]="statusOptions[rowData.Status-1] == 'Sent'" class="form-control" style="width: 123px; height: 30px"
+              (change)="updateMachineId(rowData,$event.target.value)">
+              <option value="" selected>--Select--</option>
+              <option *ngFor="let machineid of machineID; let i = index;" [value]="machineid" [selected]="machineid == rowData.MachineID">{{machineid}}</option>
+            </select>
+          </td>
+
+          <td>{{statusOptions[rowData.Status-1]}} </td>
+
+          <td>
+            <p *ngIf="(statusOptions[rowData.Status-1] =='In Progress' || statusOptions[rowData.Status-1] =='New' || statusOptions[rowData.Status-1] !== 'Image Transfer Failed' || statusOptions[rowData.Status-1] !== 'Image Transfer In-Progress') && rowData.PlanOrderId.includes(orderNumberPattern);else orderCreated">XXXXXXXX</p>
+            <ng-template #orderCreated>
+              {{rowData.PlanOrderId }}
+            </ng-template>
+          </td>
+          <td>
+            {{rowData.StructureSetID }}
+          </td>
+          <td>
+            {{rowData.Physician }}
+          </td>
+        </tr>
+
+      </ng-template>
+      <ng-template pTemplate="summary">
+        <p-footer>
+          <div class="row col-md-12">
+            <div class="col-md-8" style="text-align: left;">
+              <button disabled='true' type="button" pButton class="btn btn-black" label="Add Plan Order"></button>&nbsp;
+            </div>
+            <div *ngIf="planOrders.length > 0" class="col-md-4" style="text-align:right">
+              <button type="button" pButton class="btn btn-black" [disabled]=isDeleteDisabled (click)="updateOrderHistory()"
+                label="Delete"></button>&nbsp;
+            </div>
+          </div>
+        </p-footer>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <div class="modal fade" tabindex="-1" data-backdrop="static" id="myNotes">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header" *ngIf="planOrder" style="border-bottom: 0px;">
+          <h5 class="modal-title"> Notes for {{planOrder.PatientDetails.Name}} ID ( {{planOrder.PatientDetails.ID}} )
+          </h5>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+          <span *ngIf="planOrder">
+            <textarea class="form-control" style="width: 100%; max-height: 292px" [rows]="16" [cols]="76" [(ngModel)]="planOrder.PlanNotes"
+              pInputTextarea autoResize="autoResize"></textarea>
+          </span>
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <div *ngIf="planOrder">
+            <button type="button" [disabled]="planOrder.PlanNotes==='' || planOrder.PlanNotes===null" style="background-color: rgba(95, 94, 94, 0.753)"
+              class="ui-button-secondary btn-black" pButton (click)="savePlanNotes(planOrder.PlanNotes,planOrder.PlanOrderId)"
+              label="Save"></button>
+            <button type="button" data-dismiss="modal" style="background-color: rgba(95, 94, 94, 0.753)" class="ui-button-secondary btn-black"
+              pButton (click)="cancelNotes(planOrder)" label="Cancel"></button>
+            <button type="button" #closeNotes style="display: none;" data-dismiss="modal">&times;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-template #varian>
+  <ng-container>
+
+
+    <app-header></app-header>
+    <app-subheader [bannerLabel]="bannerLabel"></app-subheader>
+    <br />
+    <form #f="ngForm" class="form-inline">
+      <div class="col-sm-10 offset-sm-1">
+        <div class="row">
+          <div class="col-sm-2">
+            <input type="search" name="patientID" [(ngModel)]="planFilter.PatientDetails.searchInput" placeholder="Patient Name / Id"
+              class="form-control status textbox">
+          </div>
+          <div class="padding-1perc">
+            <span class="centre-align" style="position: relative; top: -1px;"> Advanced Search &nbsp;&nbsp;&nbsp;&nbsp;
+            </span>
+            <input type="checkbox" (change)="enableAdvancedSearch = !enableAdvancedSearch">
+          </div>
+          <div class="col-sm-2">
+            <input type="text" [disabled]="!enableAdvancedSearch" name="machineId" [(ngModel)]="planFilter.MachineID"
+              placeholder="Machine Id" class="form-control status textbox">
+          </div>
+          <div class="col-sm-2">
+            <input type="text" [disabled]="!enableAdvancedSearch" name="sturctureSetID" [(ngModel)]="planFilter.StructureSetID"
+              placeholder="Structure Set Id" class="form-control status textbox">
+          </div>
+          <div class="col-sm-2">
+            <div class="form-group">
+              <select [disabled]="!enableAdvancedSearch" [(ngModel)]="planStage" (change)="updatePlanFilterModel('planStage')"
+                name="planStage" class="form-control priority textbox select">
+                <option value=''>--Select Priority--</option>
+                <option *ngFor="let prior of priorityOptions;let i = index" [value]="prior.id">
+                  <div> {{prior.priority}}</div>
+                </option>
+              </select></div>
+          </div>
+          <div class="col-sm-2">
+            <div class="form-group">
+              <select [disabled]="!enableAdvancedSearch" [(ngModel)]="statusCode" (change)="updatePlanFilterModel('status')"
+                class="form-control status textbox select" name="status" id="status">
+                <option value=''>--Select Directive Stage--</option>
+                <option *ngFor="let status of statusKeys();let i = index" [value]="status">
+                  <div> {{status}}</div>
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <br>
+
+    <div style="text-align: center;">
+      <p-table class="table table-striped borderless" selectionMode="single" (selectionChange)="orderSelected($event)"
+        [(selection)]="selectedRows" [value]="planOrders | filterPlanOrder: planFilter" [autoLayout]=true [paginator]="true"
+        [rows]="5" [resetPageOnSort]="false" [responsive]="true" [resizableColumns]="true" sortField="PlanPriority"
+        sortOrder="1">
+        <ng-template class="table" pTemplate="header">
+          <tr>
+            <th style="width: 9%;" class="color-#1b1d1f" [pSortableColumn]="'PatientDetails.Name'"> Patient Name
+              <p-sortIcon class="color-#1b1d1f" [field]="'PatientDetails.Name'"></p-sortIcon>
+            </th>
+            <th style="width: 7%;" class="color-#1b1d1f" [pSortableColumn]="'PatientDetails.ID'">Patient Id
+              <p-sortIcon class="color-#1b1d1f" [field]="'PatientDetails.ID'"></p-sortIcon>
+            </th>
+            <th class="color-#1b1d1f" [pSortableColumn]="'PatientDetails.AnonymizedID'">De-identified Id
+              <p-sortIcon class="color-#1b1d1f" [field]="'PatientDetails.AnonymizedID'"></p-sortIcon>
+            </th>
+            <th style="width: 20%; padding-bottom: 5px;">Planning Directive</th>
+            <th style="width: 3%; padding-bottom: 5px;">Notes</th>
+            <th [pSortableColumn]="'PlanPriority'" style="width: 9%;color: #1b1d1f">Priority
+              <p-sortIcon id="prioritySortIcon" style="color: #1b1d1f" [field]="'PlanPriority'"></p-sortIcon>
+            </th>
+            <th style="width: 9.6%;">Machine Id</th>
+            <th [pSortableColumn]="'Status'" class="width-9pt3 sortable-color">Status
+              <p-sortIcon [field]="'Status'"></p-sortIcon>
+            </th>
+            <th>Order Id</th>
+            <th>Structure Set Id</th>
+            <th>Last Updated</th>
+          </tr>
+        </ng-template>
+        <ng-template class="table table-striped" pTemplate="body" let-rowData let-columns="columns">
+          <tr [pSelectableRow]="rowData" [ngClass]="{'active':rowData.active}">
+            <td>
+              {{rowData.PatientDetails.Name | titlecase }}
+            </td>
+            <td>
+              {{rowData.PatientDetails.ID}}
+            </td>
+            <td>
+              {{rowData.PatientDetails.AnonymizedID}}
+            </td>
+            <td class="row">
+              <div class="templateName col-sm-6">
+                <span title='{{rowData.PlanDirective }}' *ngIf="statusOptions[rowData.Status-1] !== 'New' && ( statusOptions[rowData.Status-1] !== 'Image Transfer Failed' && statusOptions[rowData.Status-1] !== 'Image Transfer In-Progress') || rowData.DirectiveId !== null,else notcreated">
+                  {{rowData.PlanDirective }}</span>
+                <ng-template #notcreated>
+                  <a [routerLink]="['/planning-directive-create',rowData.StructureSetID,rowData.PatientDetails.ID,rowData.PlanOrderId]">
+                    {{rowData.PlanDirective }}</a>
+                </ng-template>
+              </div>
+              <div class="col-sm-6">
+                <ul *ngIf="(statusOptions[rowData.Status-1] =='In Progress' || statusOptions[rowData.Status-1] == 'Image Transfer Failed' || statusOptions[rowData.Status-1] == 'Image Transfer In-Progress') && rowData.DirectiveId !== null"
+                  id="horizontal-list">
+                  <li (click)="updateDirective(rowData)" style="padding-right: 5px;" title='Update Directive'>
+                    <button><span class="edit margin-top-6px"></span></button>
+                  </li>
+                  <li (click)="replaceTemplate(rowData)" style="padding-right: 5px;" title='Change Directive'>
+                    <button><span class="refresh margin-top-6px"></span></button>
+                  </li>
+                  <li (click)="removeTemplate(rowData)" title='Remove Directive'>
+                    <button><span class="trash margin-top-6px"></span></button>
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td *ngIf="(statusOptions[rowData.Status-1] == 'New' || statusOptions[rowData.Status-1] == 'In Progress' || statusOptions[rowData.Status-1] == 'Image Transfer Failed' || statusOptions[rowData.Status-1] == 'Image Transfer In-Progress') && !rowData.PlanNotes ;  else elsepart">
+              <div>
+                <ul id='notes'>
+                  <li>
+                    <button title="{{rowData.PlanNotes}}" (click)="selectNotes(rowData)" data-toggle="modal"
+                      data-target="#myNotes"><span class="add margin-top-6px"></span></button>
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td #elsepart *ngIf="(statusOptions[rowData.Status-1] == 'New' || statusOptions[rowData.Status-1] == 'In Progress' || statusOptions[rowData.Status-1] == 'Image Transfer Failed' || statusOptions[rowData.Status-1] == 'Image Transfer In-Progress') && rowData.PlanNotes">
+              <div>
+                <ul id='notes'>
+                  <li>
+                    <button title="{{rowData.PlanNotes}}" (click)="selectNotes(rowData)" data-toggle="modal"
+                      data-target="#myNotes"><span class="edit margin-top-6px"></span></button>
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td *ngIf="(statusOptions[rowData.Status-1] == 'Sent' || statusOptions[rowData.Status-1] == 'Failed')  && rowData.PlanNotes === null ; else elsepart2">
+              <div>
+                <ul id='notes'>
+                  <li>
+                    <button [disabled]='true'><span title="{{rowData.PlanNotes}}" class="add margin-top-6px"></span></button>
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td #elsepart2 *ngIf="(statusOptions[rowData.Status-1] == 'Sent' || statusOptions[rowData.Status-1] == 'Failed')  && rowData.PlanNotes !== null  ">
+              <div>
+                <ul id='notes'>
+                  <li>
+                    <button disabled='true'><span title="{{rowData.PlanNotes}}" class="edit margin-top-6px"></span></button>
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td class="drop-down-class">
+              <select [disabled]="statusOptions[rowData.Status-1] == 'Sent' || statusOptions[rowData.Status-1] == 'Failed'"
+                style="height: 30px;" class="form-control textbox" (change)="onPriorityChange($event.target.value, rowData)">
+                <option value=0>--Select--</option>
+                <option *ngFor="let prior of priorityOptions;let i = index" [value]="prior.id" [selected]="rowData.PlanPriority != 0 ? prior.id == priorityOptions[rowData.PlanPriority-1].id : false">
+                  <div> {{prior.priority}}</div>
+                </option>
+              </select>
+            </td>
+            <td style="padding-top: 4px;padding-bottom: 4px;">
+              <select [disabled]="statusOptions[rowData.Status-1] == 'Sent' || statusOptions[rowData.Status-1] == 'Failed'"
+                class="form-control textbox" style="width: 123px; height: 30px" (change)="updateMachineId(rowData,$event.target.value)">
+                <option value="" selected>--Select--</option>
+                <option *ngFor="let machineid of machineID; let i = index;" [value]="machineid" [selected]="machineid == rowData.MachineID">{{machineid}}</option>
+              </select>
+            </td>
+
+            <td>{{statusOptions[rowData.Status-1]}} </td>
+
+
+            <td>
+              <span *ngIf="(statusOptions[rowData.Status-1] =='In Progress' || statusOptions[rowData.Status-1] =='New' || statusOptions[rowData.Status-1] == 'Image Transfer Failed' || statusOptions[rowData.Status-1] == 'Image Transfer In-Progress') && rowData.PlanOrderId.includes(orderNumberPattern);else orderCreated">XXXXXXXX</span>
+              <ng-template #orderCreated>
+                {{rowData.PlanOrderId }}
+              </ng-template>
+            </td>
+            <td>
+              {{rowData.StructureSetID }}
+            </td>
+            <td>
+              <div>{{rowData.Physician }}</div>
+              <div>{{rowData.LastUpdated }}</div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+          <p-footer>
+            <div class="row col-md-12">
+              <div class="col-md-8" style="text-align: left;">
+                <button disabled='true' type="button" pButton class="btn btn-black" label="Add Plan Order"></button>&nbsp;
+              </div>
+              <div *ngIf="planOrders.length > 0" class="col-md-4" style="text-align:right">
+                <button type="button" pButton class="btn btn-black" [disabled]=isDeleteDisabled (click)="updateOrderHistory()"
+                  label="Delete"></button>&nbsp;
+              </div>
+            </div>
+          </p-footer>
+        </ng-template>
+      </p-table>
+
+
+
+
+      <!-- <p-table [value]="planOrders | filterPlanOrder: planFilter" [paginator]="true" [rows]="1">
+        <ng-template class="table" pTemplate="header">
+          <tr>
+            <th style="width: 9%;" class="color-#1b1d1f" [pSortableColumn]="'PatientDetails.Name'"> Patient Name
+              <p-sortIcon class="color-#1b1d1f" [field]="'PatientDetails.Name'"></p-sortIcon>
+            </th>
+            <th style="width: 7%;" class="color-#1b1d1f" [pSortableColumn]="'PatientDetails.ID'">Patient Id
+              <p-sortIcon class="color-#1b1d1f" [field]="'PatientDetails.ID'"></p-sortIcon>
+            </th>
+            <th class="color-#1b1d1f" [pSortableColumn]="'PatientDetails.AnonymizedID'">De-identified Id
+              <p-sortIcon class="color-#1b1d1f" [field]="'PatientDetails.AnonymizedID'"></p-sortIcon>
+            </th>
+            <th style="width: 20%; padding-bottom: 5px;">Planning Directive</th>
+            <th style="width: 3%; padding-bottom: 5px;">Notes</th>
+            <th [pSortableColumn]="'PlanPriority'" style="width: 9%;color: #1b1d1f">Priority
+              <p-sortIcon id="prioritySortIcon" style="color: #1b1d1f" [field]="'PlanPriority'"></p-sortIcon>
+            </th>
+            <th style="width: 9.6%;">Machine Id</th>
+            <th [pSortableColumn]="'Status'" class="width-9pt3 sortable-color">Status
+              <p-sortIcon [field]="'Status'"></p-sortIcon>
+            </th>
+            <th>Order Id</th>
+            <th>Structure Set Id</th>
+            <th>Last Updated</th>
+          </tr>
+        </ng-template>
+        <ng-template class="table table-striped" pTemplate="body" let-rowData let-columns="columns">
+          <tr [pSelectableRow]="rowData" [ngClass]="{'active':rowData.active}">
+            <td>
+              {{rowData.PatientDetails.Name | titlecase }}
+            </td>
+            <td>
+              {{rowData.PatientDetails.ID}}
+            </td>
+            <td>
+              {{rowData.PatientDetails.AnonymizedID}}
+            </td>
+            <td class="row">
+              <div class="templateName col-sm-6">
+                <span title='{{rowData.PlanDirective }}' *ngIf="statusOptions[rowData.Status-1] !== 'New' && ( statusOptions[rowData.Status-1] !== 'Image Transfer Failed' && statusOptions[rowData.Status-1] !== 'Image Transfer In-Progress') || rowData.DirectiveId !== null,else notcreated">
+                  {{rowData.PlanDirective }}</span>
+                <ng-template #notcreated>
+                  <a [routerLink]="['/planning-directive-create',rowData.StructureSetID,rowData.PatientDetails.ID]">
+                    {{rowData.PlanDirective }}</a>
+                </ng-template>
+              </div>
+              <div class="col-sm-6">
+                <ul *ngIf="(statusOptions[rowData.Status-1] =='In Progress' || statusOptions[rowData.Status-1] == 'Image Transfer Failed' || statusOptions[rowData.Status-1] == 'Image Transfer In-Progress') && rowData.DirectiveId !== null"
+                  id="horizontal-list">
+                  <li (click)="updateDirective(rowData)" style="padding-right: 5px;" title='Update Directive'>
+                    <button><span class="edit margin-top-6px"></span></button>
+                  </li>
+                  <li (click)="replaceTemplate(rowData)" style="padding-right: 5px;" title='Change Directive'>
+                    <button><span class="refresh margin-top-6px"></span></button>
+                  </li>
+                  <li (click)="removeTemplate(rowData)" title='Remove Directive'>
+                    <button><span class="trash margin-top-6px"></span></button>
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td *ngIf="(statusOptions[rowData.Status-1] == 'New' || statusOptions[rowData.Status-1] == 'In Progress' || statusOptions[rowData.Status-1] == 'Image Transfer Failed' || statusOptions[rowData.Status-1] == 'Image Transfer In-Progress') && !rowData.PlanNotes ;  else elsepart">
+              <div>
+                <ul id='notes'>
+                  <li>
+                    <button title="{{rowData.PlanNotes}}" (click)="selectNotes(rowData)" data-toggle="modal"
+                      data-target="#myNotes"><span class="add margin-top-6px"></span></button>
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td #elsepart *ngIf="(statusOptions[rowData.Status-1] == 'New' || statusOptions[rowData.Status-1] == 'In Progress' || statusOptions[rowData.Status-1] == 'Image Transfer Failed' || statusOptions[rowData.Status-1] == 'Image Transfer In-Progress') && rowData.PlanNotes">
+              <div>
+                <ul id='notes'>
+                  <li>
+                    <button title="{{rowData.PlanNotes}}" (click)="selectNotes(rowData)" data-toggle="modal"
+                      data-target="#myNotes"><span class="edit margin-top-6px"></span></button>
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td *ngIf="(statusOptions[rowData.Status-1] == 'Sent' || statusOptions[rowData.Status-1] == 'Failed')  && rowData.PlanNotes === null ; else elsepart2">
+              <div>
+                <ul id='notes'>
+                  <li>
+                    <button [disabled]='true'><span title="{{rowData.PlanNotes}}" class="add margin-top-6px"></span></button>
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td #elsepart2 *ngIf="(statusOptions[rowData.Status-1] == 'Sent' || statusOptions[rowData.Status-1] == 'Failed')  && rowData.PlanNotes !== null  ">
+              <div>
+                <ul id='notes'>
+                  <li>
+                    <button disabled='true'><span title="{{rowData.PlanNotes}}" class="edit margin-top-6px"></span></button>
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td class="drop-down-class">
+              <select [disabled]="statusOptions[rowData.Status-1] == 'Sent' || statusOptions[rowData.Status-1] == 'Failed'"
+                style="height: 30px;" class="form-control textbox" (change)="onPriorityChange($event.target.value, rowData)">
+                <option value=0>--Select--</option>
+                <option *ngFor="let prior of priorityOptions;let i = index" [value]="prior.id" [selected]="rowData.PlanPriority != 0 ? prior.id == priorityOptions[rowData.PlanPriority-1].id : false">
+                  <div> {{prior.priority}}</div>
+                </option>
+              </select>
+            </td>
+            <td style="padding-top: 4px;padding-bottom: 4px;">
+              <select [disabled]="statusOptions[rowData.Status-1] == 'Sent' || statusOptions[rowData.Status-1] == 'Failed'"
+                class="form-control textbox" style="width: 123px; height: 30px" (change)="updateMachineId(rowData,$event.target.value)">
+                <option value="" selected>--Select--</option>
+                <option *ngFor="let machineid of machineID; let i = index;" [value]="machineid" [selected]="machineid == rowData.MachineID">{{machineid}}</option>
+              </select>
+            </td>
+
+            <td>{{statusOptions[rowData.Status-1]}} </td>
+
+
+            <td>
+              <span *ngIf="statusOptions[rowData.Status-1] =='In Progress' || statusOptions[rowData.Status-1] =='New' || statusOptions[rowData.Status-1] == 'Image Transfer Failed' || statusOptions[rowData.Status-1] == 'Image Transfer In-Progress' || rowData.PlanOrderId.includes(orderNumberPattern);else orderCreated">XXXXXXXX</span>
+              <ng-template #orderCreated>
+                {{rowData.PlanOrderId }}
+              </ng-template>
+            </td>
+            <td>
+              {{rowData.StructureSetID }}
+            </td>
+            <td>
+              <div>{{rowData.Physician }}</div>
+              <div>{{rowData.LastUpdated }}</div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+          <p-footer>
+            <div class="row col-md-12">
+              <div class="col-md-8" style="text-align: left;">
+                <button disabled='true' type="button" pButton class="btn btn-black" label="Add Plan Order"></button>&nbsp;
+              </div>
+              <div *ngIf="planOrders.length > 0" class="col-md-4" style="text-align:right">
+                <button type="button" pButton class="btn btn-black" [disabled]=isDeleteDisabled (click)="updateOrderHistory()"
+                  label="Delete"></button>&nbsp;
+              </div>
+            </div>
+          </p-footer>
+        </ng-template>
+      </p-table> -->
+
+    </div>
+
+    <div class="modal fade" tabindex="-1" data-backdrop="static" id="myNotes">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header" *ngIf="planOrder" style="border-bottom: 0px;">
+            <h5 class="modal-title"> Notes for {{planOrder.PatientDetails.Name}} ID ( {{planOrder.PatientDetails.ID}} )
+            </h5>
+          </div>
+          <!-- Modal body -->
+          <div class="modal-body">
+            <span *ngIf="planOrder">
+              <textarea class="form-control" style="width: 100%; max-height: 292px" [rows]="16" [cols]="76" [value]="planOrder.PlanNotes"
+                (change)="noteUpdate($event.target.value,planOrder)" pInputTextarea autoResize="autoResize"></textarea>
+            </span>
+          </div>
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <div *ngIf="planOrder">
+              <button type="button" [disabled]="planOrder.PlanNotes==='' || planOrder.PlanNotes===null" style="background-color: rgba(95, 94, 94, 0.753)"
+                class="ui-button-secondary btn-black" pButton (click)="savePlanNotes(planOrder.PlanNotes,planOrder.PlanOrderId)"
+                label="Save"></button>
+              <button type="button" data-dismiss="modal" style="background-color: rgba(95, 94, 94, 0.753)" class="ui-button-secondary btn-black"
+                pButton (click)="cancelNotes(planOrder)" label="Cancel"></button>
+              <button type="button" #closeNotes style="display: none;" data-dismiss="modal">&times;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
