@@ -1,0 +1,79 @@
+{
+    "states": [
+        {
+            "key": "DMin",
+            "id": 1
+        },
+        {
+            "key": "DMax",
+            "id": 2
+        },
+        {
+            "key": "DMean",
+            "id": 3
+        },
+        {
+            "key": "D",
+            "id": 4
+        },
+        {
+            "key": "V",
+            "id": 5
+        }
+    ],
+    "operator": [
+        {
+            "key": "<=",
+            "id": 1
+        },
+        {
+            "key": ">=",
+            "id": 2
+        },
+        {
+            "key": "<",
+            "id": 3
+        },
+        {
+            "key": ">",
+            "id": 4
+        }
+    ],
+    "leftExpModel": [
+        {
+            "key": "Gy",
+            "id": 2
+        },
+        {
+            "key": "%",
+            "id": 3
+        },
+        {
+            "key": "cc",
+            "id": 4
+        }
+    ],
+    "rightExpModel": [
+        {
+            "key": "Gy",
+            "id": 2
+        },
+        {
+            "key": "%",
+            "id": 3
+        },
+        {
+            "key": "cc",
+            "id": 4
+        }
+    ],
+    "doseConstraints": [
+        "DMin",
+        "DMax",
+        "DMean"
+    ],
+    "mode": {
+        "v": "v",
+        "d": "d"
+    }
+}

@@ -1,0 +1,5 @@
+{
+  "webAPIUrl": "http://localhost:64048/",
+  "OrderNumberPattern": "Order_",
+  "WesbSocketConnectionUrl": "ws://localhost:6320/"
+}

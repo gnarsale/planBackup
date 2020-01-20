@@ -1,0 +1,47 @@
+{
+
+    "PlanOrders":
+    [
+        {
+            "PlanOrderId":"OderId_1",
+            "PatientDetails":{"ID":"SC-I1","AnonymizedID":"TestMRN_1","Name":"Secondary Capture Image One"},
+            "StructureSetID":"Set 1",
+            "MachineID":"Machine 4",
+            "PlanDirective":"Create Directive",
+            "PlanPriority":1,
+            "Status":1,
+            "LastUpdated":"/Date(1533050903139)/",
+            "DueDate" :"/Date(1533050903139)/",
+            "Physician":"REMOTE-RO",
+            "PlanNotes" :""
+        },
+        {
+            "PlanOrderId":"OderId_2",
+            "PatientDetails":{"ID":"SC-I3","AnonymizedID":"TestMRN_3","Name":"Secondary Capture Image Three"},
+            "StructureSetID":"Set 2",
+            "MachineID":"Machine 2",
+            "PlanDirective":"Create Directive",
+            "PlanPriority":2,
+            "Status":3,
+            "LastUpdated":"/Date(1533050903139)/",
+            "DueDate" :"/Date(1533050903139)/",
+            "Physician":"REMOTE-RO",
+            "PlanNotes" :""
+        },
+        {
+            "PlanOrderId":"OderId_3",
+            "PatientDetails":{"ID":"SC-I2","AnonymizedID":"TestMRN_2","Name":"Secondary Capture Image Two"},
+            "StructureSetID":"Set 4",
+            "MachineID":"Machine 3",
+            "PlanDirective":"Create Directive",
+            "PlanPriority":1,
+            "Status":1,
+            "LastUpdated":"/Date(1533050903139)/",
+            "DueDate" :"/Date(1533050903139)/",
+            "Physician":"REMOTE-RO",
+            "PlanNotes" :""
+        }
+
+
+    ]
+}

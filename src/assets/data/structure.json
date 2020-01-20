@@ -1,0 +1,20 @@
+{
+    "Structure": [
+        {
+            "Name": "Structure1",
+            "MeaningCode": "Structure1MeaningCode"
+        },
+        {
+            "Name": "Structure2",
+            "MeaningCode": "Structure2MeaningCode"
+        },
+        {
+            "Name": "Structure3",
+            "MeaningCode": "Structure3MeaningCode"
+        },
+        {
+            "Name": "Structure4",
+            "MeaningCode": "Structure4MeaningCode"
+        }
+    ]
+}

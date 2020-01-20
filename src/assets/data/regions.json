@@ -1,0 +1,11 @@
+{
+  "SelectRegion": [{
+      "value": "wr",
+      "name": "Whole Body"
+    },
+    {
+      "value": "sr",
+      "name": "Select Region"
+    }
+  ]
+}

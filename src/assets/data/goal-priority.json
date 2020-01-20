@@ -1,0 +1,25 @@
+{
+
+  "Goal-Priority": [{
+      "Name": "1-Must",
+      "Value": "1"
+    },
+    {
+      "Name": "2-Very Important",
+      "Value": "2"
+    },
+    {
+      "Name": "3-Important",
+      "Value": "3"
+    },
+    {
+      "Name": "4-Less Important",
+      "Value": "4"
+    },
+    {
+      "Name": "R-Report Value Only",
+      "Value": "R"
+    }
+  ]
+
+}

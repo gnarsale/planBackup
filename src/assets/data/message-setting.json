@@ -1,0 +1,8 @@
+{
+  "ToastLife": 5000,
+  "ShowCloseButton": true,
+  "PositionClass": "toast-top-center",
+  "Animate": "fade",
+  "Dismiss": "auto",
+  "MaxShown": 1
+}
