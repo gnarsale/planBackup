@@ -1,0 +1,58 @@
+.oncology360 {
+  .borderless td,
+  .borderless th {
+    border: none !important;
+  }
+  .borderless tr {
+    border-bottom: 1px #c0cad3 solid;
+    height: 40px !important;
+  }
+  .sortable-color {
+    color: #5e9ed6 !important;
+  }
+  .width-9pt3 {
+    width: 9.3%;
+  }
+  .table-striped tbody tr {
+    background-color: #fff !important;
+  }
+  .ui-datatable table {
+    table-layout: auto !important;
+  }
+  .ui-table .ui-sortable-column .ui-sortable-column-icon {
+    color: #5e9ed6 !important;
+  }
+  .ui-table .ui-sortable-column .ui-sortable-column-icon:hover {
+    color: #5e9ed6 !important;
+  }
+  .templateName {
+    float: left;
+    width: 60%;
+    height: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+    line-height: 50px;
+  }
+}
+
+.varian {
+  .color-#1b1d1f {
+    color: yellow !important;
+  }
+  .ui-datatable table {
+    table-layout: auto !important;
+  }
+  .borderless td,
+  .borderless th {
+    border: none !important;
+  }
+  .borderless tr {
+    border-bottom: 1px #c0cad3 solid;
+    height: 40px !important;
+  }
+  .ui-table .ui-sortable-column.ui-state-highlight {
+    color: #1b1d1f;
+  }
+}

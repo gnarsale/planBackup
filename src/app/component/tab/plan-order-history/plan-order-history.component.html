@@ -1,0 +1,183 @@
+<ng-container *ngIf="styleConfigured==='oncology360',else varian">
+  <div>
+    <app-subheader [bannerLabel]=bannerLabel></app-subheader>
+    <br>
+    <div style="text-align: center;">
+      <p-table class="borderless" [value]="planOrderHistorys" [paginator]="true" [rows]="5" [responsive]="true"
+        [resizableColumns]="true" columnResizeMode="expand">
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th style="width: 9%;" class="color-#1b1d1f" [pSortableColumn]="'PatientDetails.Name'"> Patient Name
+              <p-sortIcon class="color-#1b1d1f" [field]="'PatientDetails.Name'"></p-sortIcon>
+            </th>
+            <th style="width: 7%;" class="color-#1b1d1f" [pSortableColumn]="'PatientDetails.ID'">Patient Id
+              <p-sortIcon class="color-#1b1d1f" [field]="'PatientDetails.ID'"></p-sortIcon>
+            </th>
+            <th class="color-#1b1d1f" [pSortableColumn]="'PatientDetails.AnonymizedID'">De-identified Id
+              <p-sortIcon class="color-#1b1d1f" [field]="'PatientDetails.AnonymizedID'"></p-sortIcon>
+            </th>
+            <th>Planning Directive</th>
+            <th>Notes</th>
+            <th [pSortableColumn]="'PlanPriority'" style="width: 9%;color: #1b1d1f">Priority
+              <p-sortIcon id="prioritySortIcon" style="color: #1b1d1f" [field]="'PlanPriority'"></p-sortIcon>
+            </th>
+            <th>Machine Id</th>
+            <th [pSortableColumn]="'Status'" class="width-9pt3 sortable-color">Status
+              <p-sortIcon [field]="'Status'"></p-sortIcon>
+            </th>
+            <th>Order Id</th>
+            <th>Structure Set Id</th>
+            <th>Last Updated</th>
+            <th>Updated By</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+          <tr [pSelectableRow]="rowData">
+            <td>
+              {{rowData.PatientDetails.Name}}
+            </td>
+            <td>
+              {{rowData.PatientDetails.ID}}
+            </td>
+            <td>
+              {{rowData.PatientDetails.AnonymizedID}}
+            </td>
+            <td>
+              {{rowData.PlanDirective }}
+            </td>
+            <td>
+              <i title={{rowData.PlanNotes}} class="fa fa-edit fa-2x"></i>
+            </td>
+            <td>
+              {{priorityOptions[rowData.PlanPriority-1].priority}}
+            </td>
+            <td>
+              {{rowData.MachineID }}
+            </td>
+            <td>
+              {{statusOptions[rowData.Status-1]}}
+            </td>
+            <td>
+              {{rowData.PlanOrderId }}
+            </td>
+            <td>
+              {{rowData.StructureSetID }}
+            </td>
+            <td>
+              {{rowData.LastUpdated}}
+            </td>
+            <td>
+              {{rowData.Physician}}
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <p-dialog [draggable]="false" header="Notes for Plan Order Details" [resizable]=false [(visible)]="displayDialog"
+      [modal]="true" [maximizable]="true" [responsive]="true" [width]="600" [minWidth]="200" [minY]="70" [baseZIndex]="10000">
+      <span *ngIf="planOrderHistory">
+        <textarea style="color: black" [rows]="16" [disabled]='true' [cols]="76" [(ngModel)]="planOrderHistory.PlanNotes"
+          pInputTextarea autoResize="autoResize"></textarea>
+      </span>
+      <p-footer>
+        <button type="button" style="background-color: lightgray" class="ui-button-secondary" pButton icon="pi pi-check"
+          label="Close" (click)="displayDialog=false"></button>
+      </p-footer>
+    </p-dialog>
+  </div>
+</ng-container>
+<ng-template #varian>
+  <div>
+    <app-header></app-header>
+    <app-subheader [bannerLabel]=bannerLabel></app-subheader>
+    <br>
+    <div style="text-align: center;">
+      <p-table class="table table-striped borderless" [value]="planOrderHistorys" sortField="PlanPriority"
+        [resetPageOnSort]="false" sortOrder="1" [paginator]="true" [rows]="5" [responsive]="true" [resizableColumns]="true"
+        columnResizeMode="expand">
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <!-- <th pResizableColumn>Patient Name</th> -->
+            <th style="width: 9%;" class="color-#1b1d1f" [pSortableColumn]="'PatientDetails.Name'"> Patient Name
+              <p-sortIcon class="color-#1b1d1f" [field]="'PatientDetails.Name'"></p-sortIcon>
+            </th>
+            <!-- <th pResizableColumn> Patient Id</th> -->
+            <th style="width: 7%;" class="color-#1b1d1f" [pSortableColumn]="'PatientDetails.ID'">Patient Id
+              <p-sortIcon class="color-#1b1d1f" [field]="'PatientDetails.ID'"></p-sortIcon>
+            </th>
+            <!-- <th pResizableColumn>De-identified Id</th> -->
+            <th class="color-#1b1d1f" [pSortableColumn]="'PatientDetails.AnonymizedID'">De-identified Id
+              <p-sortIcon class="color-#1b1d1f" [field]="'PatientDetails.AnonymizedID'"></p-sortIcon>
+            </th>
+            <th>Planning Directive</th>
+            <th>Notes</th>
+            <!-- <th pResizableColumn>Priority</th> -->
+            <th [pSortableColumn]="'PlanPriority'" style="width: 9%;color: #1b1d1f">Priority
+              <p-sortIcon id="prioritySortIcon" style="color: #1b1d1f" [field]="'PlanPriority'"></p-sortIcon>
+            </th>
+            <th>Machine Id</th>
+            <!-- <th pResizableColumn>Status</th> -->
+            <th [pSortableColumn]="'Status'" class="width-9pt3">Status
+              <p-sortIcon [field]="'Status'"></p-sortIcon>
+            </th>
+            <th>Order Id</th>
+            <th>Structure Set Id</th>
+            <th>Last Updated</th>
+            <th>Updated By</th>
+          </tr>
+        </ng-template>
+        <ng-template class="table table-striped" pTemplate="body" let-rowData let-columns="columns">
+          <tr [pSelectableRow]="rowData">
+            <td>
+              {{rowData.PatientDetails.Name}}
+            </td>
+            <td>
+              {{rowData.PatientDetails.ID}}
+            </td>
+            <td>
+              {{rowData.PatientDetails.AnonymizedID}}
+            </td>
+            <td>
+              {{rowData.PlanDirective }}
+            </td>
+            <td>
+              <button title="{{rowData.PlanNotes}}"><span style="margin-top: 6px;" class="edit"></span></button>
+            </td>
+            <td>
+              {{priorityOptions[rowData.PlanPriority-1].priority}}
+            </td>
+            <td>
+              {{rowData.MachineID }}
+            </td>
+            <td>
+              {{statusOptions[rowData.Status-1]}}
+            </td>
+            <td>
+              {{rowData.PlanOrderId }}
+            </td>
+            <td>
+              {{rowData.StructureSetID }}
+            </td>
+            <td>
+              {{rowData.LastUpdated}}
+            </td>
+            <td>
+              {{rowData.Physician}}
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <p-dialog [draggable]="false" header="Notes for Plan Order Details" [resizable]=false [(visible)]="displayDialog"
+      [modal]="true" [maximizable]="true" [responsive]="true" [width]="600" [minWidth]="200" [minY]="70" [baseZIndex]="10000">
+      <span *ngIf="planOrderHistory">
+        <textarea style="color: black" [rows]="16" [disabled]='true' [cols]="76" [(ngModel)]="planOrderHistory.PlanNotes"
+          pInputTextarea autoResize="autoResize"></textarea>
+      </span>
+      <p-footer>
+        <button type="button" style="background-color: lightgray" class="ui-button-secondary" pButton icon="pi pi-check"
+          label="Close" (click)="displayDialog=false"></button>
+      </p-footer>
+    </p-dialog>
+  </div>
+</ng-template>
